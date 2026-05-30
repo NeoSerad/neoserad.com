@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Erica+One&family=Fredoka:wght@300;400;500&family=Chivo+Mono:wght@300;400&display=swap');
+
 /* ============================================================
    NEOSERAD — Base Stylesheet
    Structure: Tokens → Reset → Typography → Layout → Components
@@ -412,4 +414,4 @@ p {
    Fredoka      = warm, rounded body text
    Chivo Mono   = sharp labels and metadata
    ------------------------------------------------------------ */
-@import url('https://fonts.googleapis.com/css2?family=Erica+One&family=Fredoka:wght@300;400;500&family=Chivo+Mono:wght@300;400&display=swap');
+

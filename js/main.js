@@ -20,8 +20,8 @@ gsap.registerPlugin(ScrollTrigger);
 const cursor = document.getElementById('cursor');
 
 /* quickTo creates an optimised setter for a single property */
-const moveCursorX = gsap.quickTo(cursor, 'x', { duration: 0.4, ease: 'power3.out' });
-const moveCursorY = gsap.quickTo(cursor, 'y', { duration: 0.4, ease: 'power3.out' });
+const moveCursorX = gsap.quickTo(cursor, 'x', { duration: 0.15, ease: 'power3.out' });
+const moveCursorY = gsap.quickTo(cursor, 'y', { duration: 0.15, ease: 'power3.out' });
 
 window.addEventListener('mousemove', (e) => {
   moveCursorX(e.clientX);
