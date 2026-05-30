@@ -1,11 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Neoserad</title>
-  </head>
-  <body>
-    <h1>Coming soon.</h1>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neoserad — Motion Graphics</title>
+  <meta name="description" content="Motion graphics portfolio of Neoserad." />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- GSAP via CDN — loads the core library plus ScrollTrigger plugin -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <!-- Page script — deferred so it runs after the DOM is ready -->
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+
+  <!-- ============================================================
+       CUSTOM CURSOR
+       A small dot that follows the mouse. Styled in CSS,
+       moved by GSAP in main.js for smooth lag-free tracking.
+       ============================================================ -->
+  <div class="cursor" id="cursor"></div>
+
+
+  <!-- ============================================================
+       NAVIGATION
+       Fixed to the top. Becomes bordered once the user scrolls
+       (the .scrolled class is toggled by main.js).
+       ============================================================ -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner container">
+
+      <!-- Wordmark — swap this for an <img> when the logo is ready -->
+      <a href="/" class="nav__logo">Neoserad</a>
+
+      <ul class="nav__links">
+        <li><a href="/" class="nav__link active">Work</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+        <li><a href="contact.html" class="nav__link">Contact</a></li>
+      </ul>
+
+    </div>
+  </nav>
+
+
+  <!-- ============================================================
+       MAIN CONTENT
+       .page adds top padding equal to the nav height so
+       content doesn't sit behind the fixed nav.
+       ============================================================ -->
+  <main class="page">
+
+
+    <!-- ----------------------------------------------------------
+         HERO
+         Deliberately sparse — a heading and a descriptor.
+         GSAP fades and slides these in on page load in main.js.
+         ---------------------------------------------------------- -->
+    <section class="hero section container">
+      <p class="label hero__label">Motion Graphics</p>
+      <h1 class="hero__heading">Moving images.<br>Considered&nbsp;motion.</h1>
+    </section>
+
+
+    <!-- ----------------------------------------------------------
+         PROJECT GRID
+         Each .card links to its own project page.
+         Cards start invisible (opacity: 0 in CSS) and are
+         animated in by GSAP ScrollTrigger as they enter the viewport.
+
+         TO ADD A REAL PROJECT:
+         1. Duplicate a .card block
+         2. Replace the placeholder <div class="card__media"> with
+            an <img> or leave as-is and update the background-image
+         3. Update the title, category label, and href
+         ---------------------------------------------------------- -->
+    <section class="grid-section section container">
+
+      <!-- Row label -->
+      <p class="label grid__label">Selected work</p>
+
+      <div class="grid" id="project-grid">
+
+        <!-- Card 1 -->
+        <a href="projects/project-one/" class="card" data-cursor="view">
+          <!-- Thumbnail — replace background-color with a real image later -->
+          <div class="card__media" style="background-color: #c8d5c0;"></div>
+          <div class="card__info">
+            <div>
+              <p class="label">Brand Identity · 2024</p>
+              <p class="card__title">Project One</p>
+            </div>
+            <span class="card__arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="projects/project-two/" class="card" data-cursor="view">
+          <div class="card__media" style="background-color: #d5cec8;"></div>
+          <div class="card__info">
+            <div>
+              <p class="label">Title Sequence · 2024</p>
+              <p class="card__title">Project Two</p>
+            </div>
+            <span class="card__arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="projects/project-three/" class="card" data-cursor="view">
+          <div class="card__media" style="background-color: #c8ccd5;"></div>
+          <div class="card__info">
+            <div>
+              <p class="label">Social Motion · 2023</p>
+              <p class="card__title">Project Three</p>
+            </div>
+            <span class="card__arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="projects/project-four/" class="card" data-cursor="view">
+          <div class="card__media" style="background-color: #d5d0c8;"></div>
+          <div class="card__info">
+            <div>
+              <p class="label">Explainer · 2023</p>
+              <p class="card__title">Project Four</p>
+            </div>
+            <span class="card__arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- Card 5 -->
+        <a href="projects/project-five/" class="card" data-cursor="view">
+          <div class="card__media" style="background-color: #cac8d5;"></div>
+          <div class="card__info">
+            <div>
+              <p class="label">Brand Identity · 2023</p>
+              <p class="card__title">Project Five</p>
+            </div>
+            <span class="card__arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- Card 6 -->
+        <a href="projects/project-six/" class="card" data-cursor="view">
+          <div class="card__media" style="background-color: #c8d5d2;"></div>
+          <div class="card__info">
+            <div>
+              <p class="label">Loop · 2022</p>
+              <p class="card__title">Project Six</p>
+            </div>
+            <span class="card__arrow">↗</span>
+          </div>
+        </a>
+
+      </div><!-- /grid -->
+    </section>
+
+
+  </main>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer container">
+    <p class="footer__copy">© 2024 Neoserad</p>
+    <p class="footer__copy">Melbourne, AU</p>
+  </footer>
+
+
+</body>
 </html>

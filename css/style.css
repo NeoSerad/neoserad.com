@@ -1,0 +1,415 @@
+/* ============================================================
+   NEOSERAD — Base Stylesheet
+   Structure: Tokens → Reset → Typography → Layout → Components
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   DESIGN TOKENS
+   All colours, fonts, spacing, and timing live here.
+   Change a value once and it updates everywhere on the site.
+   ------------------------------------------------------------ */
+:root {
+
+  /* Colours */
+  --color-bg:        #f2f0eb;   /* off-white — warmer than pure white */
+  --color-ink:       #1a1a18;   /* off-black — softer than pure black */
+  --color-ink-muted: #6b6b65;   /* secondary text, captions */
+  --color-accent:    #3d7a4f;   /* green accent — used sparingly */
+  --color-surface:   #e8e5de;   /* slightly darker surface for cards, hovers */
+
+  /* Typography */
+  --font-display: 'Erica One', Georgia, serif;       /* headings — chunky, confident */
+  --font-body:    'Fredoka', Helvetica, sans-serif;  /* body — warm and rounded */
+  --font-mono:    'Chivo Mono', monospace;           /* labels, metadata — sharp contrast */
+
+  /* Type scale */
+  --text-xs:   0.75rem;   /* 12px — labels, tags */
+  --text-sm:   0.875rem;  /* 14px — captions, meta */
+  --text-base: 1rem;      /* 16px — body */
+  --text-lg:   1.25rem;   /* 20px — lead text */
+  --text-xl:   2rem;      /* 32px — section headings */
+  --text-2xl:  3.5rem;    /* 56px — page titles */
+  --text-3xl:  6rem;      /* 96px — hero display text */
+
+  /* Spacing scale */
+  --space-xs:  0.5rem;    /* 8px */
+  --space-sm:  1rem;      /* 16px */
+  --space-md:  2rem;      /* 32px */
+  --space-lg:  4rem;      /* 64px */
+  --space-xl:  8rem;      /* 128px */
+
+  /* Layout */
+  --max-width:     1400px;  /* maximum content width */
+  --grid-gap:      1.5rem;  /* gap between project grid cells */
+  --nav-height:    5rem;    /* fixed navbar height */
+
+  /* Animation timing
+     These are referenced by GSAP too for consistency */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);   /* snappy deceleration */
+  --duration-fast:   180ms;
+  --duration-base:   400ms;
+  --duration-slow:   800ms;
+}
+
+
+/* ------------------------------------------------------------
+   RESET
+   Strips browser default styles for a clean, consistent base.
+   ------------------------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Smooth scrolling for anchor links */
+  scroll-behavior: smooth;
+  /* Prevent layout shift from scrollbar appearing */
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  /* Prevents text from being too wide to read comfortably */
+  -webkit-font-smoothing: antialiased;
+}
+
+img, video {
+  /* Images never overflow their containers */
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+
+/* ------------------------------------------------------------
+   TYPOGRAPHY
+   Base styles for headings and body text.
+   ------------------------------------------------------------ */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 400;       /* Erica One is a single-weight font — 400 is correct */
+  line-height: 1.05;
+  letter-spacing: 0.005em; /* subtle tracking — opens up Erica One without over-spacing */
+}
+
+/* Fredoka's roundness reads better with slightly looser line height */
+body, p {
+  line-height: 1.7;
+}
+
+h1 { font-size: var(--text-2xl); }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+
+p {
+  max-width: 65ch;  /* optimal line length for readability */
+}
+
+/* Small all-caps label — used for categories, metadata */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* Green accent text — use sparingly */
+.accent {
+  color: var(--color-accent);
+}
+
+
+/* ------------------------------------------------------------
+   LAYOUT UTILITIES
+   Reusable layout helpers used across all pages.
+   ------------------------------------------------------------ */
+
+/* Centres content and applies consistent horizontal padding */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+/* Pushes page content below the fixed navbar */
+.page {
+  padding-top: var(--nav-height);
+}
+
+/* Vertical rhythm between major page sections */
+.section {
+  padding-block: var(--space-xl);
+}
+
+
+/* ------------------------------------------------------------
+   NAVIGATION
+   Fixed top bar with logo on the left, links on the right.
+   ------------------------------------------------------------ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  z-index: 100;           /* sits above all page content */
+  display: flex;
+  align-items: center;
+  padding-inline: var(--space-md);
+
+  /* Frosted glass effect — lets page content scroll beneath */
+  background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Subtle bottom border that appears on scroll (added via JS) */
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-base) var(--ease-out);
+}
+
+/* Border becomes visible once the user scrolls */
+.nav.scrolled {
+  border-color: var(--color-surface);
+}
+
+.nav__inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Wordmark / logo */
+.nav__logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Nav links */
+.nav__links {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.nav__link {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  position: relative;
+
+  /* Underline slide-in on hover */
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-accent);
+  transition: width var(--duration-base) var(--ease-out);
+}
+
+.nav__link:hover {
+  color: var(--color-ink);
+}
+
+.nav__link:hover::after {
+  width: 100%;
+}
+
+/* Active page link */
+.nav__link.active {
+  color: var(--color-ink);
+}
+
+.nav__link.active::after {
+  width: 100%;
+}
+
+
+/* ------------------------------------------------------------
+   PROJECT GRID
+   Responsive masonry-style grid for the home page.
+   ------------------------------------------------------------ */
+.grid {
+  display: grid;
+  /* Auto-fills columns — minimum 320px each, maximum equal share */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--grid-gap);
+}
+
+/* Individual project card */
+.card {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface);
+  cursor: pointer;
+
+  /* Cards start invisible — GSAP will animate them in on scroll */
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+/* The thumbnail image or video preview */
+.card__media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  /* Slight scale on hover — creates a sense of depth */
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.card:hover .card__media {
+  transform: scale(1.04);
+}
+
+/* Text info below the thumbnail */
+.card__info {
+  padding: var(--space-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.card__title {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 400;
+}
+
+/* Green arrow that slides in on hover */
+.card__arrow {
+  color: var(--color-accent);
+  font-size: var(--text-lg);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.card:hover .card__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+/* ------------------------------------------------------------
+   HERO
+   ------------------------------------------------------------ */
+.hero__label {
+  margin-bottom: var(--space-sm);
+}
+
+.hero__heading {
+  font-size: clamp(var(--text-xl), 6vw, var(--text-3xl));
+  /* clamp() scales the heading fluidly between mobile and desktop */
+  max-width: 14ch;
+}
+
+
+/* ------------------------------------------------------------
+   GRID LABEL
+   ------------------------------------------------------------ */
+.grid__label {
+  margin-bottom: var(--space-md);
+}
+
+
+/* ------------------------------------------------------------
+   CURSOR
+   Custom cursor dot that follows the mouse.
+   The green fill only appears when hovering interactive elements.
+   ------------------------------------------------------------ */
+.cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  pointer-events: none;   /* cursor must never block clicks */
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  /* GSAP takes over movement — this transition is a fallback */
+  transition: background var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+/* Cursor expands and turns green over clickable elements */
+.cursor.is-hovering {
+  transform: translate(-50%, -50%) scale(4);
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+
+/* ------------------------------------------------------------
+   FOOTER
+   Minimal footer with role and social links.
+   ------------------------------------------------------------ */
+.footer {
+  padding-block: var(--space-lg);
+  border-top: 1px solid var(--color-surface);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer__copy {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+
+/* ------------------------------------------------------------
+   UTILITY — VISIBILITY
+   Used by GSAP to mark elements as animated-in.
+   ------------------------------------------------------------ */
+.is-visible {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+
+/* ------------------------------------------------------------
+   GOOGLE FONTS IMPORT
+   Loaded here so a single stylesheet handles all font loading.
+   Erica One    = bold display headings
+   Fredoka      = warm, rounded body text
+   Chivo Mono   = sharp labels and metadata
+   ------------------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Erica+One&family=Fredoka:wght@300;400;500&family=Chivo+Mono:wght@300;400&display=swap');
