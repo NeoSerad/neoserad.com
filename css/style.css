@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Erica+One&family=Fredoka:wght@300;400;500&family=Chivo+Mono:wght@300;400&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Gasoek+One&family=Fredoka:wght@300;400;500&family=Chivo+Mono:wght@300;400&display=swap');
 /* ============================================================
    NEOSERAD — Base Stylesheet
    Structure: Tokens → Reset → Typography → Layout → Components
@@ -21,7 +20,7 @@
   --color-surface:   #e8e5de;   /* slightly darker surface for cards, hovers */
 
   /* Typography */
-  --font-display: 'Erica One', Georgia, serif;       /* headings — chunky, confident */
+  --font-display: 'Gasoek One', Georgia, serif;     /* headings — bold, contemporary */
   --font-body:    'Fredoka', Helvetica, sans-serif;  /* body — warm and rounded */
   --font-mono:    'Chivo Mono', monospace;           /* labels, metadata — sharp contrast */
 
@@ -410,8 +409,7 @@ p {
 /* ------------------------------------------------------------
    GOOGLE FONTS IMPORT
    Loaded here so a single stylesheet handles all font loading.
-   Erica One    = bold display headings
+   Gasoek One   = bold, contemporary display headings
    Fredoka      = warm, rounded body text
    Chivo Mono   = sharp labels and metadata
    ------------------------------------------------------------ */
-
