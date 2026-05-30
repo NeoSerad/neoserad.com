@@ -1,8 +1,33 @@
 /* ============================================================
    NEOSERAD — main.js
-   Handles: custom cursor, nav scroll state, GSAP animations
+   Handles: dark mode default, theme toggle, custom cursor,
+            nav scroll state, GSAP animations
    Requires: GSAP core + ScrollTrigger (loaded in index.html)
    ============================================================ */
+
+
+/* ------------------------------------------------------------
+   DARK MODE
+   Dark is the default on first load. The user's preference is
+   saved to localStorage so it persists across pages and visits.
+   ------------------------------------------------------------ */
+const html = document.documentElement;
+const themeToggle = document.getElementById('theme-toggle');
+
+/* On load — apply saved preference, or default to dark */
+const savedTheme = localStorage.getItem('theme') || 'dark';
+html.classList.toggle('dark', savedTheme === 'dark');
+themeToggle.textContent = savedTheme === 'dark' ? '☀' : '☾';
+
+
+/* Toggle on click — flips the class and saves the new preference */
+themeToggle.addEventListener('click', () => {
+  const isDark = html.classList.toggle('dark');
+  themeToggle.textContent = isDark ? '☀' : '☾';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+
+
 
 
 /* ------------------------------------------------------------
@@ -28,7 +53,7 @@ window.addEventListener('mousemove', (e) => {
   moveCursorY(e.clientY);
 });
 
-/* Cursor expands and turns green over any element with data-cursor="view" */
+/* Cursor expands over any element with data-cursor="view" */
 document.querySelectorAll('[data-cursor="view"]').forEach((el) => {
   el.addEventListener('mouseenter', () => cursor.classList.add('is-hovering'));
   el.addEventListener('mouseleave', () => cursor.classList.remove('is-hovering'));
@@ -39,15 +64,77 @@ document.body.style.cursor = 'none';
 
 
 /* ------------------------------------------------------------
+   NAV SLIDING INDICATOR
+   A single absolutely-positioned line sits under the active link.
+   On hover it slides to the hovered link; on mouse out it returns
+   to the active link. GSAP drives all movement.
+   ------------------------------------------------------------ */
+const navLinks     = document.querySelectorAll('.nav__link');
+const navLinksList = document.querySelector('.nav__links');
+const activeLink   = document.querySelector('.nav__link.active');
+
+/* Create the indicator element and inject it into .nav__links */
+const indicator = document.createElement('div');
+indicator.className = 'nav__indicator';
+navLinksList.appendChild(indicator);
+
+/* Move the indicator to sit under a given link element */
+function moveIndicatorTo(el) {
+  const listRect = navLinksList.getBoundingClientRect();
+  const linkRect = el.getBoundingClientRect();
+
+  gsap.to(indicator, {
+    x: linkRect.left - listRect.left,  /* offset from .nav__links left edge */
+    width: linkRect.width,
+    duration: 0.35,
+    ease: 'power3.out',
+  });
+}
+
+/* Set initial position under the active link with no animation */
+if (activeLink) {
+  const listRect = navLinksList.getBoundingClientRect();
+  const linkRect = activeLink.getBoundingClientRect();
+  gsap.set(indicator, {
+    x: linkRect.left - listRect.left,
+    width: linkRect.width,
+  });
+}
+
+/* Slide to hovered link — return to active on mouse out */
+navLinks.forEach((link) => {
+  link.addEventListener('mouseenter', () => moveIndicatorTo(link));
+  link.addEventListener('mouseleave', () => {
+    if (activeLink) moveIndicatorTo(activeLink);
+  });
+});
+
+
+
+/* ------------------------------------------------------------
    NAV SCROLL STATE
-   Adds .scrolled to the nav once the user scrolls past 10px.
-   This triggers the subtle bottom border defined in the CSS.
+   Adds .scrolled to the nav once the user scrolls past the
+   10%–20% fade window. Simple class toggle — CSS handles
+   the background and colour transition.
    ------------------------------------------------------------ */
 const nav = document.getElementById('nav');
 
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 10);
-}, { passive: true });  /* passive: true improves scroll performance */
+function getScrollProgress() {
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = window.scrollY / scrollable;
+  const fadeStart = 0.10;
+  const fadeEnd   = 0.20;
+  return Math.min(1, Math.max(0, (progress - fadeStart) / (fadeEnd - fadeStart)));
+}
+
+function updateNav() {
+  const p = getScrollProgress();
+  /* .scrolled triggers the CSS background and colour transition */
+  nav.classList.toggle('scrolled', p >= 1);
+}
+
+window.addEventListener('scroll', updateNav, { passive: true });
+window.addEventListener('resize', updateNav, { passive: true });
 
 
 /* ------------------------------------------------------------

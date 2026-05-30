@@ -1,4 +1,12 @@
+/* ------------------------------------------------------------
+   GOOGLE FONTS IMPORT
+   Gasoek One   = bold, contemporary display headings
+   Fredoka      = warm, rounded body text
+   Chivo Mono   = sharp labels and metadata
+   ------------------------------------------------------------ */
 @import url('https://fonts.googleapis.com/css2?family=Gasoek+One&family=Fredoka:wght@300;400;500&family=Chivo+Mono:wght@300;400&display=swap');
+
+
 /* ============================================================
    NEOSERAD — Base Stylesheet
    Structure: Tokens → Reset → Typography → Layout → Components
@@ -13,20 +21,37 @@
 :root {
 
   /* Colours */
-  --color-bg:        #f2f0eb;   /* off-white — warmer than pure white */
-  --color-ink:       #1a1a18;   /* off-black — softer than pure black */
-  --color-ink-muted: #6b6b65;   /* secondary text, captions */
-  --color-accent:    #3d7a4f;   /* green accent — used sparingly */
-  --color-surface:   #e8e5de;   /* slightly darker surface for cards, hovers */
+  --color-bg:        #FCFFF2;
+  --color-ink:       #071610;
+  --color-ink-muted: #4a5e55;
+  --color-accent:    #0C4F33;
+  --color-surface:   #eef2e5;
+}
+
+/* ------------------------------------------------------------
+   DARK MODE TOKENS
+   Applied when <html> carries the .dark class.
+   Toggled by JS. Dark is the default on first load.
+   ------------------------------------------------------------ */
+html.dark {
+  --color-bg:        #071610;   /* off-black becomes the background */
+  --color-ink:       #FCFFF2;   /* off-white becomes the text */
+  --color-ink-muted: #6b8c7a;   /* muted text — lighter in dark mode */
+  --color-accent:    #2a9e62;   /* slightly lighter green so it reads on dark bg */
+  --color-surface:   #0e2318;   /* darker surface for cards in dark mode */
+}
+
+/* Colour transitions are handled by the .dark class toggle */
+html {
 
   /* Typography */
   --font-display: 'Gasoek One', Georgia, serif;     /* headings — bold, contemporary */
   --font-body:    'Fredoka', Helvetica, sans-serif;  /* body — warm and rounded */
   --font-mono:    'Chivo Mono', monospace;           /* labels, metadata — sharp contrast */
 
-  /* Type scale */
-  --text-xs:   0.75rem;   /* 12px — labels, tags */
-  --text-sm:   0.875rem;  /* 14px — captions, meta */
+  /* Type scale — minimum size is 16px across the board */
+  --text-xs:   1rem;      /* 16px — labels, tags (floor) */
+  --text-sm:   1rem;      /* 16px — captions, meta (floor) */
   --text-base: 1rem;      /* 16px — body */
   --text-lg:   1.25rem;   /* 20px — lead text */
   --text-xl:   2rem;      /* 32px — section headings */
@@ -184,19 +209,48 @@ p {
   align-items: center;
   padding-inline: var(--space-md);
 
-  /* Frosted glass effect — lets page content scroll beneath */
-  background: color-mix(in srgb, var(--color-bg) 80%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* Starts transparent — fades to solid inverted colour on scroll */
+  background: transparent;
 
-  /* Subtle bottom border that appears on scroll (added via JS) */
+  /* Both background and border transition smoothly */
   border-bottom: 1px solid transparent;
-  transition: border-color var(--duration-base) var(--ease-out);
+  transition: background-color 0.4s ease,
+              border-color 0.4s ease;
 }
 
-/* Border becomes visible once the user scrolls */
-.nav.scrolled {
-  border-color: var(--color-surface);
+/* In dark mode: nav fades to solid off-white */
+html.dark .nav.scrolled {
+  background: #FCFFF2;
+  border-color: #FCFFF2;
+}
+
+/* In light mode: nav fades to solid off-black */
+html:not(.dark) .nav.scrolled {
+  background: #071610;
+  border-color: #071610;
+}
+
+/* Text inverts to match the new nav background */
+html.dark .nav.scrolled .nav__logo,
+html.dark .nav.scrolled .nav__link,
+html.dark .nav.scrolled .nav__toggle {
+  color: #071610;
+}
+
+html:not(.dark) .nav.scrolled .nav__logo,
+html:not(.dark) .nav.scrolled .nav__link,
+html:not(.dark) .nav.scrolled .nav__toggle {
+  color: #FCFFF2;
+}
+
+/* Muted links in scrolled state */
+.nav.scrolled .nav__link {
+  opacity: 0.6;
+}
+
+.nav.scrolled .nav__link:hover,
+.nav.scrolled .nav__link.active {
+  opacity: 1;
 }
 
 .nav__inner {
@@ -218,6 +272,7 @@ p {
 .nav__links {
   display: flex;
   gap: var(--space-md);
+  position: relative;   /* establishes the coordinate space for the sliding indicator */
 }
 
 .nav__link {
@@ -227,37 +282,56 @@ p {
   text-transform: uppercase;
   color: var(--color-ink-muted);
   position: relative;
+}
 
-  /* Underline slide-in on hover */
+/* Remove individual per-link underline pseudo-elements —
+   a single sliding indicator replaces them all */
+
+/* Colour transition only on hover — prevents delay firing on theme toggle */
+.nav__link:hover {
+  color: var(--color-ink);
   transition: color var(--duration-fast) var(--ease-out);
 }
 
-.nav__link::after {
-  content: '';
+/* The single sliding underline indicator.
+   Positioned absolutely within .nav__links by GSAP in main.js.
+   Starts under the active link and slides to wherever the mouse goes. */
+.nav__indicator {
   position: absolute;
   bottom: -2px;
-  left: 0;
-  width: 0;
   height: 1px;
   background: var(--color-accent);
-  transition: width var(--duration-base) var(--ease-out);
+  pointer-events: none;   /* must never interfere with mouse events */
+  transition: background-color 0.5s ease; /* follows theme toggle fade */
 }
 
-.nav__link:hover {
+/* Theme toggle button — sits in the nav */
+.nav__toggle {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* Colour and background transition only on hover */
+.nav__toggle:hover {
   color: var(--color-ink);
+  background: var(--color-surface);
+  transition: color var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out);
 }
 
-.nav__link:hover::after {
-  width: 100%;
-}
 
-/* Active page link */
+
 .nav__link.active {
   color: var(--color-ink);
-}
-
-.nav__link.active::after {
-  width: 100%;
 }
 
 
@@ -354,26 +428,26 @@ p {
 /* ------------------------------------------------------------
    CURSOR
    Custom cursor dot that follows the mouse.
-   The green fill only appears when hovering interactive elements.
+   mix-blend-mode: difference inverts whatever colours sit beneath
+   the cursor — so it stays visible on any background including black.
+   Must use pure white as the base colour for inversion to work correctly.
    ------------------------------------------------------------ */
 .cursor {
   position: fixed;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--color-ink);
-  pointer-events: none;   /* cursor must never block clicks */
+  background: #ffffff;        /* pure white required for difference blend to invert correctly */
+  pointer-events: none;       /* cursor must never block clicks */
   z-index: 9999;
   transform: translate(-50%, -50%);
-  /* GSAP takes over movement — this transition is a fallback */
-  transition: background var(--duration-fast) var(--ease-out),
-              transform var(--duration-fast) var(--ease-out);
+  mix-blend-mode: difference; /* inverts pixels beneath — white on black = white, white on white = black */
+  transition: transform var(--duration-fast) var(--ease-out);
 }
 
-/* Cursor expands and turns green over clickable elements */
+/* Cursor expands over clickable elements */
 .cursor.is-hovering {
   transform: translate(-50%, -50%) scale(4);
-  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
 }
 
 
@@ -404,12 +478,3 @@ p {
   opacity: 1 !important;
   transform: none !important;
 }
-
-
-/* ------------------------------------------------------------
-   GOOGLE FONTS IMPORT
-   Loaded here so a single stylesheet handles all font loading.
-   Gasoek One   = bold, contemporary display headings
-   Fredoka      = warm, rounded body text
-   Chivo Mono   = sharp labels and metadata
-   ------------------------------------------------------------ */
