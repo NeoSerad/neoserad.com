@@ -34,7 +34,7 @@ themeToggle.addEventListener('click', () => {
    SETUP
    Register the ScrollTrigger plugin with GSAP before use.
    ------------------------------------------------------------ */
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 
 /* ------------------------------------------------------------
@@ -117,19 +117,34 @@ navLinks.forEach((link) => {
    10%–20% fade window. Simple class toggle — CSS handles
    the background and colour transition.
    ------------------------------------------------------------ */
+/* ------------------------------------------------------------
+   REEL SCROLL CUE
+   Fades in after 10 s, hides once the user scrolls.
+   ------------------------------------------------------------ */
+const reelCue = document.getElementById('reel-cue');
+
+setTimeout(() => {
+  if (window.scrollY < 20) reelCue.classList.add('is-visible');
+}, 10000);
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) reelCue.classList.add('is-hidden');
+  else reelCue.classList.remove('is-hidden');
+}, { passive: true });
+
+
+/* ------------------------------------------------------------
+   NAV SCROLL STATE
+   Threshold based on reel height so .scrolled only fires once
+   the visitor has scrolled past the video into the content.
+   ------------------------------------------------------------ */
 const nav = document.getElementById('nav');
 
-function getScrollProgress() {
-  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = window.scrollY / scrollable;
-  const fadeStart = 0.10;
-  const fadeEnd   = 0.20;
-  return Math.min(1, Math.max(0, (progress - fadeStart) / (fadeEnd - fadeStart)));
-}
-
 function updateNav() {
-  const p = getScrollProgress();
-  /* .scrolled triggers the CSS background and colour transition */
+  const reelHeight = document.getElementById('reel').offsetHeight;
+  const fadeStart  = reelHeight * 0.90;
+  const fadeEnd    = reelHeight * 1.05;
+  const p = Math.min(1, Math.max(0, (window.scrollY - fadeStart) / (fadeEnd - fadeStart)));
   nav.classList.toggle('scrolled', p >= 1);
 }
 
@@ -156,6 +171,63 @@ gsap.from('.hero__heading', {
   duration: 1,
   ease: 'power3.out',
   delay: 0.4,  /* slight stagger after the label */
+});
+
+
+/* ------------------------------------------------------------
+   WIGGLE — "move" letters animate when the heading enters view
+   ------------------------------------------------------------ */
+const wiggleLetters = document.querySelectorAll('.wiggle-letter');
+
+/* Motion curves */
+const EASE_UP   = 'cubic-bezier(.59,.02,.96,.36)';
+const EASE_DOWN = 'cubic-bezier(.29,.72,.66,1.36)';
+const EASE_REST = 'cubic-bezier(.24,.67,.4,.97)';
+
+function playWiggle() {
+  const tl = gsap.timeline();
+
+  tl.to(wiggleLetters, {
+    color: '#28CC4B',
+    duration: 0.18,
+    stagger: 0.06,
+    ease: 'power2.out',
+  }, 0);
+
+  tl.to(wiggleLetters, {
+    color: 'inherit',
+    duration: 0.55,
+    stagger: 0.06,
+    ease: 'power2.in',
+  }, 0.35);
+
+  tl.to(wiggleLetters, {
+    y: -10,
+    duration: 0.18,
+    stagger: 0.07,
+    ease: EASE_UP,
+  }, 0);
+
+  tl.to(wiggleLetters, {
+    y: 6,
+    duration: 0.18,
+    stagger: 0.07,
+    ease: EASE_DOWN,
+  }, 0.22);
+
+  tl.to(wiggleLetters, {
+    y: 0,
+    duration: 0.3,
+    stagger: 0.07,
+    ease: EASE_REST,
+  }, 0.44);
+}
+
+ScrollTrigger.create({
+  trigger: '.hero__heading',
+  start: 'top 60%',
+  onEnter:     playWiggle,
+  onEnterBack: playWiggle,
 });
 
 

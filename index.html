@@ -8,10 +8,12 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="preload" as="video" href="video/showreel.mp4" type="video/mp4">
 
   <!-- GSAP via CDN — loads the core library plus ScrollTrigger plugin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js" defer></script>
 
   <!-- Page script — deferred so it runs after the DOM is ready -->
   <script src="js/main.js" defer></script>
@@ -24,6 +26,27 @@
        moved by GSAP in main.js for smooth lag-free tracking.
        ============================================================ -->
   <div class="cursor" id="cursor"></div>
+
+
+  <!-- ============================================================
+       SHOWREEL
+       ============================================================ -->
+  <section class="reel" id="reel" aria-label="Showreel">
+    <video
+      class="reel__video"
+      src="video/showreel.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    ></video>
+    <div class="reel__overlay" aria-hidden="true"></div>
+    <div class="reel__cue" id="reel-cue" aria-hidden="true">
+      <span class="reel__cue-line"></span>
+      <span class="reel__cue-arrow"></span>
+    </div>
+  </section>
 
 
   <!-- ============================================================
@@ -63,8 +86,8 @@
          GSAP fades and slides these in on page load in main.js.
          ---------------------------------------------------------- -->
     <section class="hero section container">
-      <p class="label hero__label">Motion Graphics</p>
-      <h1 class="hero__heading">Moving images.<br>Considered&nbsp;motion.</h1>
+      <p class="label hero__label">Hey! I'm Neo.</p>
+      <h1 class="hero__heading">Making pixels <span class="wiggle-word"><span class="wiggle-letter">m</span><span class="wiggle-letter">o</span><span class="wiggle-letter">v</span><span class="wiggle-letter">e</span></span> and having fun along the way.</h1>
     </section>
 
 

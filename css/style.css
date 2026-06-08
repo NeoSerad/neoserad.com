@@ -20,63 +20,129 @@
    ------------------------------------------------------------ */
 :root {
 
-  /* Colours */
+  /* Colours — light mode */
   --color-bg:        #FCFFF2;
   --color-ink:       #071610;
   --color-ink-muted: #4a5e55;
   --color-accent:    #0C4F33;
   --color-surface:   #eef2e5;
-}
-
-/* ------------------------------------------------------------
-   DARK MODE TOKENS
-   Applied when <html> carries the .dark class.
-   Toggled by JS. Dark is the default on first load.
-   ------------------------------------------------------------ */
-html.dark {
-  --color-bg:        #071610;   /* off-black becomes the background */
-  --color-ink:       #FCFFF2;   /* off-white becomes the text */
-  --color-ink-muted: #6b8c7a;   /* muted text — lighter in dark mode */
-  --color-accent:    #2a9e62;   /* slightly lighter green so it reads on dark bg */
-  --color-surface:   #0e2318;   /* darker surface for cards in dark mode */
-}
-
-/* Colour transitions are handled by the .dark class toggle */
-html {
 
   /* Typography */
-  --font-display: 'Gasoek One', Georgia, serif;     /* headings — bold, contemporary */
-  --font-body:    'Fredoka', Helvetica, sans-serif;  /* body — warm and rounded */
-  --font-mono:    'Chivo Mono', monospace;           /* labels, metadata — sharp contrast */
+  --font-display: 'Gasoek One', Georgia, serif;
+  --font-body:    'Fredoka', Helvetica, sans-serif;
+  --font-mono:    'Chivo Mono', monospace;
 
-  /* Type scale — minimum size is 16px across the board */
-  --text-xs:   1rem;      /* 16px — labels, tags (floor) */
-  --text-sm:   1rem;      /* 16px — captions, meta (floor) */
-  --text-base: 1rem;      /* 16px — body */
-  --text-lg:   1.25rem;   /* 20px — lead text */
-  --text-xl:   2rem;      /* 32px — section headings */
-  --text-2xl:  3.5rem;    /* 56px — page titles */
-  --text-3xl:  6rem;      /* 96px — hero display text */
+  /* Type scale */
+  --text-xs:   1rem;
+  --text-sm:   1rem;
+  --text-base: 1rem;
+  --text-lg:   1.25rem;
+  --text-xl:   2rem;
+  --text-2xl:  3.5rem;
+  --text-3xl:  6rem;
 
   /* Spacing scale */
-  --space-xs:  0.5rem;    /* 8px */
-  --space-sm:  1rem;      /* 16px */
-  --space-md:  2rem;      /* 32px */
-  --space-lg:  4rem;      /* 64px */
-  --space-xl:  8rem;      /* 128px */
+  --space-xs:  0.5rem;
+  --space-sm:  1rem;
+  --space-md:  2rem;
+  --space-lg:  4rem;
+  --space-xl:  8rem;
 
   /* Layout */
-  --max-width:     1400px;  /* maximum content width */
-  --grid-gap:      1.5rem;  /* gap between project grid cells */
-  --nav-height:    5rem;    /* fixed navbar height */
+  --max-width:  1400px;
+  --grid-gap:   1.5rem;
+  --nav-height: 5rem;
 
-  /* Animation timing
-     These are referenced by GSAP too for consistency */
-  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);   /* snappy deceleration */
+  /* Animation timing */
+  --ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast:   180ms;
   --duration-base:   400ms;
   --duration-slow:   800ms;
 }
+
+/* ------------------------------------------------------------
+   DARK MODE TOKENS
+   ------------------------------------------------------------ */
+html.dark {
+  --color-bg:        #071610;
+  --color-ink:       #FCFFF2;
+  --color-ink-muted: #6b8c7a;
+  --color-accent:    #2a9e62;
+  --color-surface:   #0e2318;
+}
+
+
+/* ------------------------------------------------------------
+   SHOWREEL
+   ------------------------------------------------------------ */
+.reel {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  background: #000;
+}
+
+.reel__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reel__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+}
+
+.reel__cue {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.reel__cue.is-visible { opacity: 1; }
+.reel__cue.is-hidden  { opacity: 0; pointer-events: none; }
+
+.reel__cue-line {
+  display: block;
+  width: 1px;
+  height: 24px;
+  background: #fff;
+  animation: cue-pulse 1.6s ease-in-out infinite;
+}
+
+.reel__cue-arrow {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid #fff;
+  animation: cue-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes cue-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+
+
+/* ------------------------------------------------------------
+   WIGGLE WORD
+   ------------------------------------------------------------ */
+.wiggle-word   { display: inline; white-space: nowrap; }
+.wiggle-letter { display: inline-block; will-change: transform, color; }
 
 
 /* ------------------------------------------------------------
@@ -412,7 +478,6 @@ html:not(.dark) .nav.scrolled .nav__toggle {
 
 .hero__heading {
   font-size: clamp(var(--text-xl), 6vw, var(--text-3xl));
-  /* clamp() scales the heading fluidly between mobile and desktop */
   max-width: 14ch;
 }
 
