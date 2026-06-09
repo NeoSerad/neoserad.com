@@ -6,6 +6,7 @@
    ============================================================ */
 
 
+
 /* ------------------------------------------------------------
    DARK MODE
    Dark is the default on first load. The user's preference is
@@ -223,12 +224,15 @@ function playWiggle() {
   }, 0.44);
 }
 
-ScrollTrigger.create({
-  trigger: '.hero__heading',
-  start: 'top 60%',
-  onEnter:     playWiggle,
-  onEnterBack: playWiggle,
-});
+/* IntersectionObserver fires reliably in both scroll directions
+   regardless of the scroll position at initialisation time — unlike
+   ScrollTrigger, whose onEnterBack misfires when the page loads
+   already scrolled to #work. */
+const wiggleObserver = new IntersectionObserver(
+  ([entry]) => { if (entry.isIntersecting) playWiggle(); },
+  { rootMargin: '0px 0px -30% 0px', threshold: 0 }
+);
+wiggleObserver.observe(document.querySelector('.hero__heading'));
 
 
 /* ------------------------------------------------------------
@@ -299,13 +303,19 @@ document.querySelectorAll('.card').forEach((card) => {
 
 
 /* ------------------------------------------------------------
-   HASH NAVIGATION — WORK LINK FROM PROJECT PAGES
-   ScrollTrigger's initialisation can displace the browser's
-   native hash scroll. This re-anchors to #work after GSAP is
-   fully set up, using 'instant' so it always lands correctly.
+   OVERLAY FADE — Arriving from a project page via the Work /
+   Back link. The inline script in <head> created the overlay
+   before first paint. Scroll into position while it covers the
+   page, then fade it out to reveal the grid.
    ------------------------------------------------------------ */
-if (window.location.hash === '#work') {
-  requestAnimationFrame(() => {
-    document.getElementById('work')?.scrollIntoView({ behavior: 'instant' });
+const overlay = document.getElementById('page-overlay');
+if (overlay) {
+  document.getElementById('work')?.scrollIntoView({ behavior: 'instant' });
+  gsap.to(overlay, {
+    opacity: 0,
+    duration: 0.5,
+    ease: 'power2.out',
+    delay: 0.15,
+    onComplete: () => overlay.remove(),
   });
 }

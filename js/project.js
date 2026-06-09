@@ -46,6 +46,14 @@ document.querySelectorAll('[data-cursor="view"]').forEach((el) => {
   el.addEventListener('mouseleave', () => cursor.classList.remove('is-hovering'));
 });
 
+/* Hide custom cursor over the Vimeo embed — the iframe swallows
+   mousemove events, which would leave the dot frozen on the border. */
+const embed = document.querySelector('.project-embed');
+if (embed) {
+  embed.addEventListener('mouseenter', () => cursor.style.opacity = '0');
+  embed.addEventListener('mouseleave', () => cursor.style.opacity = '1');
+}
+
 document.body.style.cursor = 'none';
 
 
@@ -130,4 +138,30 @@ gsap.to(enterEls, {
   stagger: 0.09,
   ease: 'power3.out',
   delay: 0.1,
+});
+
+
+/* ------------------------------------------------------------
+   PAGE EXIT — Intercept clicks on any link pointing back to
+   #work. Fade the page to the background colour, then navigate.
+   The landing page's inline script will create the same overlay
+   on arrival, hiding the instant scroll-to-grid.
+   ------------------------------------------------------------ */
+document.querySelectorAll('a[href*="#work"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const href = link.getAttribute('href');
+    const t    = localStorage.getItem('theme') || 'dark';
+    const ol   = document.createElement('div');
+    ol.style.cssText = 'position:fixed;inset:0;z-index:9998;background:' +
+                       (t === 'dark' ? '#071610' : '#FCFFF2') +
+                       ';opacity:0;pointer-events:none';
+    document.body.appendChild(ol);
+    gsap.to(ol, {
+      opacity: 1,
+      duration: 0.4,
+      ease: 'power2.in',
+      onComplete: () => { window.location.href = href; },
+    });
+  });
 });
