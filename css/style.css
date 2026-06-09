@@ -607,10 +607,41 @@ html:not(.dark) .nav.scrolled .nav__toggle {
 
 /* ------------------------------------------------------------
    PROJECT BODY
-   Long-form process description.
+   Long-form process description. Supports an optional side
+   media column via .project-body__text + .project-body__media.
    ------------------------------------------------------------ */
-.project-body p + p {
+.project-body {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xl);
+}
+
+.project-body__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.project-body p + p,
+.project-body__text p + p {
   margin-top: var(--space-sm);
+}
+
+.project-body__media {
+  flex: 0 0 42%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.project-body__media img,
+.project-body__media svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.project-body__svg {
+  color: var(--color-ink);
 }
 
 
