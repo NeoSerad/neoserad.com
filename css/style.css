@@ -699,3 +699,24 @@ html:not(.dark) .nav.scrolled .nav__toggle {
   color: var(--color-bg);
   transform: scale(1.10);
 }
+
+
+/* ------------------------------------------------------------
+   PROJECT PAGE — INITIAL HIDDEN STATE
+   Hides all entrance-animation elements before the first paint
+   so deferred JS never causes a flash of visible content.
+   GSAP overrides these with inline styles when it animates in.
+   ------------------------------------------------------------ */
+.project-page .nav,
+.project-page .project-hero__label,
+.project-page .project-hero__title,
+.project-page .project-hero__quote,
+.project-page .project-hero__brief,
+.project-page .project-embed-section,
+.project-page .project-body,
+.project-page .project-gifs-section,
+.project-page .project-back-section,
+.project-page .footer {
+  opacity: 0;
+  transform: translateY(24px);
+}

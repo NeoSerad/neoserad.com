@@ -101,3 +101,33 @@ function updateNav() {
 
 window.addEventListener('scroll', updateNav, { passive: true });
 window.addEventListener('resize', updateNav, { passive: true });
+
+
+/* ------------------------------------------------------------
+   PAGE ENTRANCE TRANSITION
+   All sections start hidden and stagger in top-to-bottom,
+   matching the exit animation on the home page.
+   ------------------------------------------------------------ */
+const enterEls = [
+  '.nav',
+  '.project-hero__label',
+  '.project-hero__title',
+  '.project-hero__quote',
+  '.project-hero__brief',
+  '.project-embed-section',
+  '.project-body',
+  '.project-gifs-section',
+  '.project-back-section',
+  '.footer',
+].map(sel => document.querySelector(sel)).filter(Boolean);
+
+gsap.set(enterEls, { opacity: 0, y: 24 });
+
+gsap.to(enterEls, {
+  opacity: 1,
+  y: 0,
+  duration: 0.55,
+  stagger: 0.09,
+  ease: 'power3.out',
+  delay: 0.1,
+});

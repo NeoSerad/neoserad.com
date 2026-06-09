@@ -253,3 +253,46 @@ document.querySelectorAll('.card').forEach((card, i) => {
     delay: i < 2 ? i * 0.1 : 0,
   });
 });
+
+
+/* ------------------------------------------------------------
+   CARD CLICK — EXIT TRANSITION
+   Fades out all other elements, moves the clicked card to the
+   centre of the viewport, scales it up 50%, then navigates.
+   ------------------------------------------------------------ */
+let transitioning = false;
+
+document.querySelectorAll('.card').forEach((card) => {
+  card.addEventListener('click', (e) => {
+    if (transitioning) return;
+    e.preventDefault();
+    transitioning = true;
+
+    /* Lock all interaction for the duration of the animation */
+    document.body.style.pointerEvents = 'none';
+
+    const href = card.getAttribute('href');
+    const otherCards = [...document.querySelectorAll('.card')].filter(c => c !== card);
+
+    /* Delta to translate the card's centre to the viewport centre */
+    const rect = card.getBoundingClientRect();
+    const dx = window.innerWidth  / 2 - (rect.left + rect.width  / 2);
+    const dy = window.innerHeight / 2 - (rect.top  + rect.height / 2);
+
+    const tl = gsap.timeline({
+      onComplete: () => { window.location.href = href; },
+    });
+
+    /* Step 1 — fade out everything except the clicked card */
+    tl.to(
+      [nav, document.querySelector('.hero'), document.querySelector('.grid__label'), document.querySelector('.footer'), ...otherCards],
+      { opacity: 0, duration: 0.35, ease: 'power2.out' }
+    );
+
+    /* Step 2 — slide card to viewport centre */
+    tl.to(card, { x: dx, y: dy, duration: 0.55, ease: 'power3.inOut' });
+
+    /* Step 3 — scale up 50% and fade out, then navigate */
+    tl.to(card, { scale: 1.5, opacity: 0, duration: 0.4, ease: 'power2.in' });
+  });
+});
