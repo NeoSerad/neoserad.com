@@ -296,3 +296,16 @@ document.querySelectorAll('.card').forEach((card) => {
     tl.to(card, { scale: 1.5, opacity: 0, duration: 0.4, ease: 'power2.in' });
   });
 });
+
+
+/* ------------------------------------------------------------
+   HASH NAVIGATION — WORK LINK FROM PROJECT PAGES
+   ScrollTrigger's initialisation can displace the browser's
+   native hash scroll. This re-anchors to #work after GSAP is
+   fully set up, using 'instant' so it always lands correctly.
+   ------------------------------------------------------------ */
+if (window.location.hash === '#work') {
+  requestAnimationFrame(() => {
+    document.getElementById('work')?.scrollIntoView({ behavior: 'instant' });
+  });
+}
