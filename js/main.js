@@ -15,8 +15,8 @@
 const html = document.documentElement;
 const themeToggle = document.getElementById('theme-toggle');
 
-/* On load — apply saved preference, or default to dark */
-const savedTheme = localStorage.getItem('theme') || 'dark';
+/* On load — apply saved preference, or default to light */
+const savedTheme = localStorage.getItem('theme') || 'light';
 html.classList.toggle('dark', savedTheme === 'dark');
 themeToggle.textContent = savedTheme === 'dark' ? '☀' : '☾';
 
@@ -307,7 +307,7 @@ document.querySelectorAll('.card').forEach((card) => {
    Anchor-only links (#work) are excluded — those just scroll.
    ------------------------------------------------------------ */
 function fadeToPage(href) {
-  const t  = localStorage.getItem('theme') || 'dark';
+  const t  = localStorage.getItem('theme') || 'light';
   const ol = document.createElement('div');
   ol.style.cssText = 'position:fixed;inset:0;z-index:9998;background:' +
                      (t === 'dark' ? '#071610' : '#FCFFF2') +

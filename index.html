@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <!-- Cover the page immediately if arriving via #work so the instant
        scroll-to-grid is invisible. Reads localStorage for the correct
        background colour before the stylesheet has even parsed. -->
-  <script>if(location.hash==='#work'){var _t=localStorage.getItem('theme')||'dark';var _ol=document.createElement('div');_ol.id='page-overlay';_ol.style.cssText='position:fixed;inset:0;z-index:9998;background:'+(_t==='dark'?'#071610':'#FCFFF2');document.documentElement.appendChild(_ol);}</script>
+  <script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');</script>
+  <script>if(location.hash==='#work'){var _t=localStorage.getItem('theme')||'light';var _ol=document.createElement('div');_ol.id='page-overlay';_ol.style.cssText='position:fixed;inset:0;z-index:9998;background:'+(_t==='dark'?'#071610':'#FCFFF2');document.documentElement.appendChild(_ol);}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neoserad — Motion Graphics</title>
+  <title>Neo Serad - Motion Designer</title>
   <meta name="description" content="Motion graphics portfolio of Neoserad." />
 
   <!-- Stylesheet -->
+  <link rel="icon" href="Favicon.png" type="image/png">
   <link rel="stylesheet" href="css/style.css" />
 
   <!-- GSAP via CDN — loads the core library plus ScrollTrigger plugin -->

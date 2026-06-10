@@ -11,7 +11,7 @@
 const html = document.documentElement;
 const themeToggle = document.getElementById('theme-toggle');
 
-const savedTheme = localStorage.getItem('theme') || 'dark';
+const savedTheme = localStorage.getItem('theme') || 'light';
 html.classList.toggle('dark', savedTheme === 'dark');
 themeToggle.textContent = savedTheme === 'dark' ? '☀' : '☾';
 
@@ -151,7 +151,7 @@ gsap.to(enterEls, {
    nav links (About, Contact). Active link is skipped.
    ------------------------------------------------------------ */
 function fadeToPage(href) {
-  const t  = localStorage.getItem('theme') || 'dark';
+  const t  = localStorage.getItem('theme') || 'light';
   const ol = document.createElement('div');
   ol.style.cssText = 'position:fixed;inset:0;z-index:9998;background:' +
                      (t === 'dark' ? '#071610' : '#FCFFF2') +
@@ -178,7 +178,7 @@ if (clipVideos.length) {
     video.addEventListener('mouseenter', () => {
       video.pause();
       clipVideos.forEach(other => {
-        if (other !== video) gsap.to(other, { opacity: 0.75, duration: 0.3, ease: 'power2.out' });
+        if (other !== video) gsap.to(other, { opacity: 0.2, duration: 0.3, ease: 'power2.out' });
       });
     });
     video.addEventListener('mouseleave', () => {
