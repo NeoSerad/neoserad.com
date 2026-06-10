@@ -146,26 +146,24 @@ gsap.to(enterEls, {
 
 
 /* ------------------------------------------------------------
-   PAGE EXIT — Intercept clicks on any link pointing back to
-   #work. Fade the page to the background colour, then navigate.
-   The landing page's inline script will create the same overlay
-   on arrival, hiding the instant scroll-to-grid.
+   PAGE EXIT — Fade to background colour before any page
+   navigation. Covers: Work/Back links (#work), and all other
+   nav links (About, Contact). Active link is skipped.
    ------------------------------------------------------------ */
-document.querySelectorAll('a[href*="#work"]').forEach(link => {
+function fadeToPage(href) {
+  const t  = localStorage.getItem('theme') || 'dark';
+  const ol = document.createElement('div');
+  ol.style.cssText = 'position:fixed;inset:0;z-index:9998;background:' +
+                     (t === 'dark' ? '#071610' : '#FCFFF2') +
+                     ';opacity:0;pointer-events:none';
+  document.body.appendChild(ol);
+  gsap.to(ol, { opacity: 1, duration: 0.4, ease: 'power2.in',
+    onComplete: () => { window.location.href = href; } });
+}
+
+document.querySelectorAll('a[href*="#work"], .nav__link:not(.active):not([href*="#work"])').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-    const href = link.getAttribute('href');
-    const t    = localStorage.getItem('theme') || 'dark';
-    const ol   = document.createElement('div');
-    ol.style.cssText = 'position:fixed;inset:0;z-index:9998;background:' +
-                       (t === 'dark' ? '#071610' : '#FCFFF2') +
-                       ';opacity:0;pointer-events:none';
-    document.body.appendChild(ol);
-    gsap.to(ol, {
-      opacity: 1,
-      duration: 0.4,
-      ease: 'power2.in',
-      onComplete: () => { window.location.href = href; },
-    });
+    fadeToPage(link.getAttribute('href'));
   });
 });

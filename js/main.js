@@ -303,6 +303,28 @@ document.querySelectorAll('.card').forEach((card) => {
 
 
 /* ------------------------------------------------------------
+   NAV PAGE EXIT — Fade out before navigating to About / Contact.
+   Anchor-only links (#work) are excluded — those just scroll.
+   ------------------------------------------------------------ */
+function fadeToPage(href) {
+  const t  = localStorage.getItem('theme') || 'dark';
+  const ol = document.createElement('div');
+  ol.style.cssText = 'position:fixed;inset:0;z-index:9998;background:' +
+                     (t === 'dark' ? '#071610' : '#FCFFF2') +
+                     ';opacity:0;pointer-events:none';
+  document.body.appendChild(ol);
+  gsap.to(ol, { opacity: 1, duration: 0.4, ease: 'power2.in',
+    onComplete: () => { window.location.href = href; } });
+}
+
+document.querySelectorAll('.nav__link').forEach(link => {
+  const href = link.getAttribute('href');
+  if (!href || href.startsWith('#')) return;
+  link.addEventListener('click', e => { e.preventDefault(); fadeToPage(href); });
+});
+
+
+/* ------------------------------------------------------------
    OVERLAY FADE — Arriving from a project page via the Work /
    Back link. The inline script in <head> created the overlay
    before first paint. Scroll into position while it covers the
