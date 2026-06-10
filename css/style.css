@@ -481,22 +481,15 @@ html:not(.dark) .nav.scrolled .nav__toggle {
   z-index: 1;
 }
 
-/* Light mode hover — all info text goes surface colour */
-html:not(.dark) .card:hover .card__info .label,
+/* Light mode hover — title goes surface colour */
 html:not(.dark) .card:hover .card__info .card__title {
   color: var(--color-surface);
   transition: color var(--duration-base) var(--ease-out);
 }
 
-/* Dark mode hover — muted label lifts to match the card title white */
-html.dark .card:hover .card__info .label {
-  color: var(--color-ink);
-  transition: color var(--duration-base) var(--ease-out);
-}
-
 .card__title {
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   font-weight: 400;
 }
 
