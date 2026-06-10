@@ -289,7 +289,7 @@ document.querySelectorAll('.card').forEach((card) => {
 
     /* Step 1 — fade out everything except the clicked card */
     tl.to(
-      [nav, document.querySelector('.hero'), document.querySelector('.grid__label'), document.querySelector('.footer'), ...otherCards],
+      [nav, document.querySelector('.hero'), document.querySelector('.grid__label'), document.querySelector('#landing-embed'), document.querySelector('.footer'), ...otherCards].filter(Boolean),
       { opacity: 0, duration: 0.35, ease: 'power2.out' }
     );
 
