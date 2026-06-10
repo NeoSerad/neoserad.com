@@ -118,6 +118,7 @@ window.addEventListener('resize', updateNav, { passive: true });
    ------------------------------------------------------------ */
 const enterEls = [
   '.nav',
+  // Project pages
   '.project-hero__label',
   '.project-hero__title',
   '.project-hero__quote',
@@ -126,6 +127,9 @@ const enterEls = [
   '.project-body',
   '.project-gifs-section',
   '.project-back-section',
+  // About page
+  '.about-layout',
+  '.about-cta-section',
   '.footer',
 ].map(sel => document.querySelector(sel)).filter(Boolean);
 

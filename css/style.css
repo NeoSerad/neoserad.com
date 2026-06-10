@@ -21,7 +21,7 @@
 :root {
 
   /* Colours — light mode */
-  --color-bg:        #FCFFF2;
+  --color-bg:        #eef3dc;
   --color-ink:       #071610;
   --color-ink-muted: #4a5e55;
   --color-accent:    #0C4F33;
@@ -64,7 +64,7 @@
    DARK MODE TOKENS
    ------------------------------------------------------------ */
 html.dark {
-  --color-bg:        #071610;
+  --color-bg:        #050b09;
   --color-ink:       #FCFFF2;
   --color-ink-muted: #6b8c7a;
   --color-accent:    #2a9e62;
@@ -98,6 +98,20 @@ html.dark {
   pointer-events: none;
 }
 
+.reel__fade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+  z-index: 2;
+  animation: reel-fade 0.5s ease-out forwards;
+}
+
+@keyframes reel-fade {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
 .reel__cue {
   position: absolute;
   bottom: var(--space-lg);
@@ -108,6 +122,7 @@ html.dark {
   align-items: center;
   gap: 0;
   opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.85));
   transition: opacity var(--duration-slow) var(--ease-out);
 }
 
@@ -417,7 +432,7 @@ html:not(.dark) .nav.scrolled .nav__toggle {
   position: relative;
   overflow: hidden;
   background: var(--color-surface);
-  cursor: pointer;
+  cursor: none;
 
   /* Cards start invisible — GSAP will animate them in on scroll */
   opacity: 0;
@@ -650,7 +665,7 @@ html:not(.dark) .nav.scrolled .nav__toggle {
    2 rows × 3 columns of equal cells.
    ------------------------------------------------------------ */
 .project-gifs-section {
-  padding-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
 }
 
 .project-gifs {
@@ -673,6 +688,7 @@ html:not(.dark) .nav.scrolled .nav__toggle {
    Outlined pill link centred below the gif grid.
    ------------------------------------------------------------ */
 .project-back-section {
+  padding-top: 3rem;
   padding-bottom: var(--space-xl);
   display: flex;
   justify-content: center;
@@ -717,6 +733,121 @@ html:not(.dark) .nav.scrolled .nav__toggle {
 .project-page .project-gifs-section,
 .project-page .project-back-section,
 .project-page .footer {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+
+/* ------------------------------------------------------------
+   ABOUT PAGE
+   ------------------------------------------------------------ */
+.about-layout {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+
+.about-photo {
+  flex: 0 0 44%;
+  align-self: stretch;   /* grow to the full height of the content column */
+  overflow: hidden;
+}
+
+.about-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center; /* crop evenly from both left and right */
+  display: block;
+}
+
+.about-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.about-name {
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: 1;
+  margin-bottom: var(--space-xs);
+}
+
+.about-role {
+  margin-bottom: var(--space-sm);
+}
+
+.about-bio p + p {
+  margin-top: 0.75rem;
+}
+
+.about-pillars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.about-pillar__title {
+  font-family: var(--font-display);
+  font-size: 1.375rem; /* --text-base (16px) + 6px */
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.2rem;
+}
+
+/* "WANT TO SEE IT IN ACTION?" button */
+
+.about-cta-section {
+  padding-top: 2rem;
+  padding-bottom: var(--space-xl);
+  display: flex;
+  justify-content: center;
+}
+
+.about-hero {
+  padding-bottom: var(--space-md);
+}
+
+.about-cta {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-cta__default,
+.about-cta__hover {
+  display: block;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    opacity  var(--duration-base) var(--ease-out);
+}
+
+.about-cta__hover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-110%);
+  opacity: 0;
+}
+
+.about-cta:hover .about-cta__default {
+  transform: translateY(110%);
+  opacity: 0;
+}
+
+.about-cta:hover .about-cta__hover {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Initial hidden state — prevents flash before deferred JS runs */
+.about-page .nav,
+.about-page .about-layout,
+.about-page .about-cta-section,
+.about-page .footer {
   opacity: 0;
   transform: translateY(24px);
 }
