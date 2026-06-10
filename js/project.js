@@ -167,3 +167,25 @@ document.querySelectorAll('a[href*="#work"], .nav__link:not(.active):not([href*=
     fadeToPage(link.getAttribute('href'));
   });
 });
+
+
+/* ------------------------------------------------------------
+   CLIP GRID HOVER — Pause the hovered clip and dim the others.
+   ------------------------------------------------------------ */
+const clipVideos = document.querySelectorAll('.project-gif video');
+if (clipVideos.length) {
+  clipVideos.forEach(video => {
+    video.addEventListener('mouseenter', () => {
+      video.pause();
+      clipVideos.forEach(other => {
+        if (other !== video) gsap.to(other, { opacity: 0.75, duration: 0.3, ease: 'power2.out' });
+      });
+    });
+    video.addEventListener('mouseleave', () => {
+      video.play();
+      clipVideos.forEach(other => {
+        if (other !== video) gsap.to(other, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      });
+    });
+  });
+}

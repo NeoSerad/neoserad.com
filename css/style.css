@@ -549,6 +549,34 @@ html:not(.dark) .nav.scrolled .nav__toggle {
   color: var(--color-ink-muted);
 }
 
+.footer__icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.footer__icon {
+  display: flex;
+  align-items: center;
+  color: #6b8c7a;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+html:not(.dark) .footer__icon {
+  color: #4a5e55;
+}
+
+.footer__icon:hover {
+  opacity: 0.65;
+  transform: scale(1.15);
+}
+
+.footer__icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
 
 /* ------------------------------------------------------------
    UTILITY — VISIBILITY
