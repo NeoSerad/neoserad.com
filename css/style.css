@@ -634,6 +634,14 @@ html:not(.dark) .footer__icon {
   padding-bottom: var(--space-xl);
 }
 
+#landing-embed {
+  padding-bottom: 0;
+}
+
+#work.section {
+  padding-top: 160px;
+}
+
 .project-embed {
   width: 100%;
   aspect-ratio: 16 / 9;
