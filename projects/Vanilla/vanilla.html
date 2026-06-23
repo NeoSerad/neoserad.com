@@ -42,22 +42,6 @@
       <p class="project-hero__brief">A collaged showcase of work I've produced during my time as their in-house motion designer.</p>
     </section>
 
-    <!-- Vimeo embed -->
-    <section class="project-embed-section container">
-      <div class="project-embed">
-        <!--
-          Replace VIDEO_ID with the Vimeo video ID.
-          If the video has a privacy hash, append ?h=HASH to the src.
-          Example: https://player.vimeo.com/video/123456789
-        -->
-        <iframe
-          src="https://player.vimeo.com/video/VIDEO_ID"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </section>
-
     <!-- Process body -->
     <section class="project-body section container">
       <div class="project-body__text">
@@ -67,15 +51,14 @@
       <!-- Optional: add .project-body__media with project SVGs/images to the right -->
     </section>
 
-    <!-- Gif grid — 2 rows × 3 columns -->
+    <!-- Gif grid — left(2 stacked) | center tall | right(2 stacked) -->
     <section class="project-gifs-section container">
       <div class="project-gifs">
-        <div class="project-gif"><img src="gif-1.gif" alt="" /></div>
-        <div class="project-gif"><img src="gif-2.gif" alt="" /></div>
-        <div class="project-gif"><img src="gif-3.gif" alt="" /></div>
-        <div class="project-gif"><img src="gif-4.gif" alt="" /></div>
-        <div class="project-gif"><img src="gif-5.gif" alt="" /></div>
-        <div class="project-gif"><img src="gif-6.gif" alt="" /></div>
+        <div class="project-gif"><video src="gif-1.mp4" autoplay loop muted playsinline></video></div>
+        <div class="project-gif project-gif--tall"><video src="gif-2.mp4" autoplay loop muted playsinline></video></div>
+        <div class="project-gif"><video src="gif-3.mp4" autoplay loop muted playsinline></video></div>
+        <div class="project-gif"><video src="gif-4.mp4" autoplay loop muted playsinline></video></div>
+        <div class="project-gif"><video src="gif-5.mp4" autoplay loop muted playsinline></video></div>
       </div>
     </section>
 

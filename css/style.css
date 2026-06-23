@@ -754,7 +754,7 @@ html:not(.dark) .footer__icon {
 
 /* ------------------------------------------------------------
    GIF GRID
-   2 rows × 3 columns of equal cells.
+   3 columns: left(2 stacked) | center tall | right(2 stacked)
    ------------------------------------------------------------ */
 .project-gifs-section {
   padding-bottom: var(--space-md);
@@ -763,15 +763,29 @@ html:not(.dark) .footer__icon {
 .project-gifs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
   gap: var(--grid-gap);
+}
+
+.project-gif {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-surface);
+  border-radius: 8px;
+}
+
+.project-gif--tall {
+  grid-row: span 2;
+  aspect-ratio: 9 / 16;
+  align-self: center;
 }
 
 .project-gif video,
 .project-gif img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  background: var(--color-surface);
+  object-fit: cover;
 }
 
 
