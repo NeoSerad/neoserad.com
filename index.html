@@ -40,13 +40,15 @@
   <section class="reel" id="reel" aria-label="Showreel">
     <video
       class="reel__video"
-      src="https://file.garden/afmGk3tutzpQHcjJ/8mb.video-Rda-mFODh7sF.mp4"
       autoplay
       muted
-      loop
       playsinline
       preload="auto"
-    ></video>
+      data-seamless-loop
+    >
+      <source src="https://neoserad.b-cdn.net/Index/Landing%20Montage.webm" type="video/webm">
+      <source src="https://neoserad.b-cdn.net/Index/Landing%20Montage.mp4" type="video/mp4">
+    </video>
     <div class="reel__overlay" aria-hidden="true"></div>
     <div class="reel__fade" aria-hidden="true"></div>
     <div class="reel__cue" id="reel-cue" aria-hidden="true">

@@ -341,3 +341,25 @@ if (overlay) {
     onComplete: () => overlay.remove(),
   });
 }
+
+
+/* ------------------------------------------------------------
+   SEAMLESS LOOP
+   Seeks back 0.2 s before the video ends to prevent the black
+   frame the browser inserts between native loop iterations.
+   ------------------------------------------------------------ */
+document.querySelectorAll('video[data-seamless-loop]').forEach(video => {
+  let seeking = false;
+  video.addEventListener('timeupdate', () => {
+    if (!seeking && video.duration && video.currentTime >= video.duration - 0.2) {
+      seeking = true;
+      video.currentTime = 0;
+    }
+  });
+  video.addEventListener('seeked', () => {
+    if (seeking) {
+      seeking = false;
+      video.play();
+    }
+  });
+});

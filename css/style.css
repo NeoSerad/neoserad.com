@@ -761,7 +761,7 @@ html.dark .vanilla-page .project-body__media img {
 
 /* Scrolling text: full viewport width, label stays in container */
 .vanilla-monitor-section {
-  padding-block: var(--space-xl) 0;
+  padding-block: 0;
 }
 
 /* Carousel */
