@@ -1,4 +1,41 @@
 /* ------------------------------------------------------------
+   LAZY VIDEO LOADING
+   Individual videos are observed directly. Carousel videos sit
+   off-screen horizontally (overflow: hidden), so the carousel
+   container is observed instead and all three load together.
+   ------------------------------------------------------------ */
+function loadVideo(video) {
+  if (!video.dataset.src) return;
+  video.src = video.dataset.src;
+  delete video.dataset.src;
+  video.load();
+  video.play().catch(() => {});
+}
+
+const lazyObserver = new IntersectionObserver((entries, obs) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    if (el.tagName === 'VIDEO') {
+      loadVideo(el);
+    } else {
+      el.querySelectorAll('video[data-src]').forEach(loadVideo);
+    }
+    obs.unobserve(el);
+  });
+}, { rootMargin: '200px 0px' });
+
+const carouselContainer = document.getElementById('vanilla-carousel');
+
+document.querySelectorAll('.vanilla-page video[data-src]').forEach(video => {
+  if (carouselContainer && carouselContainer.contains(video)) return;
+  lazyObserver.observe(video);
+});
+
+if (carouselContainer) lazyObserver.observe(carouselContainer);
+
+
+/* ------------------------------------------------------------
    LOGO ANIMATION CAROUSEL
    ------------------------------------------------------------ */
 const carousel = document.getElementById('vanilla-carousel');
