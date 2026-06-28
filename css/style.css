@@ -1095,6 +1095,41 @@ html.dark .vanilla-page .project-body__media img {
   opacity: 1;
 }
 
+/* ── Media particle blur backdrop ──────────────────────────────────────── */
+.nav,
+.page,
+.footer {
+  transition: filter 0.3s var(--ease-out);
+}
+
+body.media-active .nav,
+body.media-active .page,
+body.media-active .footer {
+  filter: blur(4px);
+}
+
+/* ── Media trigger words (films / shows / video games) ─────────────────── */
+.media-word {
+  border-bottom: 1px dashed currentColor;
+  cursor: default;
+  user-select: none;
+}
+
+/* Particle labels that fly out on hover */
+.media-particle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  font-family: var(--font-mono);
+  font-size: 3rem;
+  letter-spacing: 0.05em;
+  color: var(--color-ink);
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
 /* Initial hidden state — prevents flash before deferred JS runs */
 .about-page .nav,
 .about-page .about-layout,
