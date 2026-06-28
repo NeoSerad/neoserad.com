@@ -174,7 +174,7 @@ html.dark {
 
 html {
   /* Smooth scrolling for anchor links */
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
   /* Prevent layout shift from scrollbar appearing */
   scrollbar-gutter: stable;
 }
