@@ -42,3 +42,18 @@ gsap.ticker.add(onTick);
    After a freeze GSAP would silently skip time, which desynchronises Lenis.
    Setting this to 0 keeps them locked together at all times.                 */
 gsap.ticker.lagSmoothing(0);
+
+/* ── Iframe scroll fix ──────────────────────────────────────────────────────
+   Iframes capture wheel events, breaking Lenis when the cursor drifts over
+   a video embed mid-scroll. Pointer events are disabled on all iframes while
+   the wheel is moving and restored 300 ms after the last wheel event.        */
+const iframes = document.querySelectorAll('iframe');
+let iframeTimer;
+
+window.addEventListener('wheel', () => {
+  iframes.forEach(f => f.style.pointerEvents = 'none');
+  clearTimeout(iframeTimer);
+  iframeTimer = setTimeout(() => {
+    iframes.forEach(f => f.style.pointerEvents = '');
+  }, 300);
+}, { passive: true });
