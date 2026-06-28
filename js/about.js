@@ -60,8 +60,11 @@ function explode(trigger) {
 
     gsap.set(el, { xPercent: -50, yPercent: -50, x: cx, y: cy, opacity: 1, scale: 0.9 });
 
-    const angle = (Math.PI * 2 / items.length) * i + (Math.random() - 0.5) * 0.5;
-    const dist  = 160 + Math.random() * 220;
+    const angle    = (Math.PI * 2 / items.length) * i + (Math.random() - 0.5) * 0.5;
+    const mobile   = window.innerWidth <= 768;
+    const dist     = mobile
+      ? 60  + Math.random() * 80
+      : 160 + Math.random() * 220;
 
     /* fly out and hold — no automatic fade, dismissed on mouseleave */
     gsap.to(el, {

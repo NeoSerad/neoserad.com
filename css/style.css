@@ -1170,3 +1170,89 @@ body.media-active .footer {
   opacity: 0;
   transform: translateY(24px);
 }
+
+
+/* ============================================================
+   RESPONSIVE
+   All mobile/tablet overrides live here.
+   Breakpoints: 768px (tablet+phone), 480px (small phone)
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+  /* ── Global spacing ───────────────────────────────────────── */
+  .section { padding-block: var(--space-lg); }
+  .container { padding-inline: var(--space-sm); }
+
+  /* ── Navigation ───────────────────────────────────────────── */
+  .nav { padding-inline: var(--space-sm); }
+  .nav__links { gap: var(--space-sm); }
+
+  /* ── Custom cursor (touch screens have no pointer) ────────── */
+  .cursor { display: none; }
+
+  /* ── Footer ───────────────────────────────────────────────── */
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    text-align: center;
+  }
+
+  /* ── Index — project card grid (2-col → 1-col) ────────────── */
+  .grid { grid-template-columns: 1fr; }
+
+  /* ── Project pages — clip grid (3-col → 1-col) ───────────── */
+  .project-gifs { grid-template-columns: 1fr; }
+
+  /* ── project-body (side-by-side → stacked) ───────────────── */
+  .project-body {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .project-body__media {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  /* ── About — photo + bio (side-by-side → stacked) ────────── */
+  .about-layout { flex-direction: column; }
+  .about-photo {
+    flex: 0 0 auto;
+    width: calc(100% + 2 * var(--space-sm));
+    max-width: none;
+    margin-inline: calc(-1 * var(--space-sm));
+    align-self: auto;
+  }
+
+  /* ── About — particle font size on mobile ───────────────────── */
+  .media-particle { font-size: 1rem; }
+
+  /* ── Vanilla — gif grid (asymmetric → tall-first + 2×2) ──── */
+  .vanilla-page .project-gifs { grid-template-columns: 1fr 1fr; }
+
+  .vanilla-center-col {
+    grid-column: 1 / -1;
+    order: -1;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .vanilla-page .project-gif--tall { width: 60%; }
+
+  .vanilla-audio-hint { display: none; }
+
+}
+
+@media (max-width: 480px) {
+
+  /* ── Tighter spacing on small phones ─────────────────────── */
+  .section { padding-block: var(--space-md); }
+
+  /* ── Hero heading — raise clamp floor for narrow screens ──── */
+  .hero__heading {
+    font-size: clamp(var(--text-lg), 8vw, var(--text-2xl));
+  }
+
+}
