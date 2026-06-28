@@ -17,7 +17,17 @@ function loadVideo(video) {
   }
   video.load();
   video.play().catch(() => {});
+
+  /* remove skeleton once the browser has enough data to render a frame */
+  video.addEventListener('canplay', () => {
+    video.parentElement.classList.remove('is-loading');
+  }, { once: true });
 }
+
+/* mark all video containers as loading on page init */
+document.querySelectorAll(
+  '.vanilla-page .project-gif, .vanilla-monitor, .vanilla-carousel__item'
+).forEach(el => el.classList.add('is-loading'));
 
 const lazyObserver = new IntersectionObserver((entries, obs) => {
   entries.forEach(entry => {
@@ -50,17 +60,44 @@ if (carousel) {
   const track   = carousel.querySelector('.vanilla-carousel__track');
   const prevBtn = carousel.querySelector('.vanilla-carousel__btn--prev');
   const nextBtn = carousel.querySelector('.vanilla-carousel__btn--next');
-  const total   = carousel.querySelectorAll('.vanilla-carousel__item').length;
+  const items   = [...carousel.querySelectorAll('.vanilla-carousel__item')];
+  const total   = items.length;
   let current   = 0;
+
+  function videoAt(index) {
+    return items[index]?.querySelector('video');
+  }
 
   function goTo(index) {
     current = (index + total) % total;
     track.style.transform = `translateX(-${current * carousel.offsetWidth}px)`;
+
+    items.forEach((_, i) => {
+      const video = videoAt(i);
+      if (!video) return;
+      if (i === current) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
   }
+
+  /* when each video first loads, pause it if it isn't the active slide */
+  items.forEach((_, i) => {
+    const video = videoAt(i);
+    if (!video) return;
+    video.addEventListener('canplay', () => {
+      if (i !== current) video.pause();
+    }, { once: true });
+  });
 
   prevBtn.addEventListener('click', () => goTo(current - 1));
   nextBtn.addEventListener('click', () => goTo(current + 1));
-  window.addEventListener('resize', () => goTo(current));
+  window.addEventListener('resize', () => {
+    track.style.transform = `translateX(-${current * carousel.offsetWidth}px)`;
+  });
 }
 
 

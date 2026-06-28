@@ -2,7 +2,7 @@ const MEDIA = {
   films: [
     'Whiplash', 'Moneyball', 'The Big Short', 'Uncut Gems', '1917', 'Air',
     'Baby Driver', 'Bohemian Rhapsody', 'Chef', 'Ford v Ferrari',
-    'Knives Out', 'Parasite', 'Ratatouille', 'Spiderverse', 'Tag', 'The Social Network'
+    'Knives Out', 'Coach Carter', 'Parasite', 'Ratatouille', 'Spiderverse', 'Tag', 'The Social Network'
   ],
   shows: Array(16).fill('The Bear'),
   'video-games': [
