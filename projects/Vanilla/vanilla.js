@@ -1,4 +1,26 @@
 /* ------------------------------------------------------------
+   LOGO ANIMATION CAROUSEL
+   ------------------------------------------------------------ */
+const carousel = document.getElementById('vanilla-carousel');
+if (carousel) {
+  const track   = carousel.querySelector('.vanilla-carousel__track');
+  const prevBtn = carousel.querySelector('.vanilla-carousel__btn--prev');
+  const nextBtn = carousel.querySelector('.vanilla-carousel__btn--next');
+  const total   = carousel.querySelectorAll('.vanilla-carousel__item').length;
+  let current   = 0;
+
+  function goTo(index) {
+    current = (index + total) % total;
+    track.style.transform = `translateX(-${current * carousel.offsetWidth}px)`;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  window.addEventListener('resize', () => goTo(current));
+}
+
+
+/* ------------------------------------------------------------
    VANILLA LOGOS — match star height to wordmark rendered height.
    ------------------------------------------------------------ */
 const wordmark = document.querySelector('.vanilla-page .project-body__media img:first-child');
