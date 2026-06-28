@@ -1226,7 +1226,11 @@ body.media-active .footer {
   }
 
   /* ── About — particle font size on mobile ───────────────────── */
-  .media-particle { font-size: 1rem; }
+  .media-particle { font-size: 2rem; }
+
+  /* ── Project hero — let quote and brief run full width ──────── */
+  .project-hero__quote { max-width: 100%; }
+  .project-hero__brief { max-width: 100%; }
 
   /* ── Vanilla — gif grid (asymmetric → tall-first + 2×2) ──── */
   .vanilla-page .project-gifs { grid-template-columns: 1fr 1fr; }
@@ -1241,7 +1245,21 @@ body.media-active .footer {
 
   .vanilla-page .project-gif--tall { width: 60%; }
 
-  .vanilla-audio-hint { display: none; }
+  /* hide "Hover…" text, show "Tap…" via ::after */
+  .vanilla-audio-hint {
+    display: block;
+    font-size: 0;
+    width: 60%;
+    max-width: none;
+    margin-bottom: var(--space-sm);
+  }
+  .vanilla-audio-hint::after {
+    content: 'Tap each video to\A enable audio!';
+    white-space: pre-wrap;
+    font-size: var(--text-xs);
+    letter-spacing: normal;
+    text-transform: none;
+  }
 
 }
 
