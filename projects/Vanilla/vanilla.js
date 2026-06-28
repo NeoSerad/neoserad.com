@@ -5,9 +5,16 @@
    container is observed instead and all three load together.
    ------------------------------------------------------------ */
 function loadVideo(video) {
-  if (!video.dataset.src) return;
-  video.src = video.dataset.src;
-  delete video.dataset.src;
+  const sources = video.querySelectorAll('source[data-src]');
+  if (sources.length) {
+    sources.forEach(s => { s.src = s.dataset.src; delete s.dataset.src; });
+    delete video.dataset.lazy;
+  } else if (video.dataset.src) {
+    video.src = video.dataset.src;
+    delete video.dataset.src;
+  } else {
+    return;
+  }
   video.load();
   video.play().catch(() => {});
 }
@@ -19,7 +26,7 @@ const lazyObserver = new IntersectionObserver((entries, obs) => {
     if (el.tagName === 'VIDEO') {
       loadVideo(el);
     } else {
-      el.querySelectorAll('video[data-src]').forEach(loadVideo);
+      el.querySelectorAll('video[data-lazy], video[data-src]').forEach(loadVideo);
     }
     obs.unobserve(el);
   });
@@ -27,7 +34,7 @@ const lazyObserver = new IntersectionObserver((entries, obs) => {
 
 const carouselContainer = document.getElementById('vanilla-carousel');
 
-document.querySelectorAll('.vanilla-page video[data-src]').forEach(video => {
+document.querySelectorAll('.vanilla-page video[data-lazy], .vanilla-page video[data-src]').forEach(video => {
   if (carouselContainer && carouselContainer.contains(video)) return;
   lazyObserver.observe(video);
 });
