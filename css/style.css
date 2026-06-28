@@ -753,8 +753,7 @@ html:not(.dark) .footer__icon {
 
 
 /* ------------------------------------------------------------
-   GIF GRID
-   3 columns: left(2 stacked) | center tall | right(2 stacked)
+   GIF GRID — default (equal cells, no forced aspect ratio)
    ------------------------------------------------------------ */
 .project-gifs-section {
   padding-bottom: var(--space-md);
@@ -763,28 +762,42 @@ html:not(.dark) .footer__icon {
 .project-gifs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto auto;
   gap: var(--grid-gap);
 }
 
-.project-gif {
+.project-gif video,
+.project-gif img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--color-surface);
+}
+
+/* ------------------------------------------------------------
+   GIF GRID — Vanilla layout
+   3 columns: left(2 × 4:5) | center 9:16 | right(2 × 4:5)
+   ------------------------------------------------------------ */
+.vanilla-page .project-gifs {
+  grid-template-rows: auto auto;
+}
+
+.vanilla-page .project-gif {
   aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--color-surface);
   border-radius: 8px;
 }
 
-.project-gif--tall {
+.vanilla-page .project-gif--tall {
   grid-row: span 2;
   aspect-ratio: 9 / 16;
   align-self: center;
 }
 
-.project-gif video,
-.project-gif img {
+.vanilla-page .project-gif video,
+.vanilla-page .project-gif img {
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
 }
 
