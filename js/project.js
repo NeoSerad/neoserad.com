@@ -171,9 +171,10 @@ document.querySelectorAll('a[href*="#work"], .nav__link:not(.active):not([href*=
 
 /* ------------------------------------------------------------
    CLIP GRID HOVER — Pause the hovered clip and dim the others.
+   Skipped on vanilla-page which has its own hover behaviour.
    ------------------------------------------------------------ */
 const clipVideos = document.querySelectorAll('.project-gif video');
-if (clipVideos.length) {
+if (clipVideos.length && !document.body.classList.contains('vanilla-page')) {
   clipVideos.forEach(video => {
     video.addEventListener('mouseenter', () => {
       video.pause();

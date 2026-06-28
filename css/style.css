@@ -729,6 +729,26 @@ html:not(.dark) .footer__icon {
   color: var(--color-ink);
 }
 
+.vanilla-page .project-body {
+  padding-top: 0;
+}
+
+.vanilla-page .project-body__media {
+  gap: var(--space-lg);
+}
+
+html.dark .vanilla-page .project-body__media img {
+  filter: invert(1);
+}
+
+.vanilla-page .project-body__media img:last-child {
+  animation: vanilla-star-spin 30s linear infinite;
+}
+
+@keyframes vanilla-star-spin {
+  to { transform: rotate(360deg); }
+}
+
 .moodboard {
   margin: 0;
 }
@@ -788,10 +808,27 @@ html:not(.dark) .footer__icon {
   border-radius: 8px;
 }
 
-.vanilla-page .project-gif--tall {
+.vanilla-center-col {
   grid-row: span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6rem;
+}
+
+.vanilla-audio-hint {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-ink-muted);
+}
+
+.vanilla-page .project-gif--tall {
   aspect-ratio: 9 / 16;
-  align-self: center;
+  width: 100%;
 }
 
 .vanilla-page .project-gif video,
