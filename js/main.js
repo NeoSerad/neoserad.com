@@ -38,31 +38,6 @@ themeToggle.addEventListener('click', () => {
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 
-/* ------------------------------------------------------------
-   CUSTOM CURSOR
-   Tracks mouse position using GSAP's quickTo for silky smooth
-   movement with a slight lag — feels more alive than CSS alone.
-   ------------------------------------------------------------ */
-const cursor = document.getElementById('cursor');
-
-/* quickTo creates an optimised setter for a single property */
-const moveCursorX = gsap.quickTo(cursor, 'x', { duration: 0.05, ease: 'power3.out' });
-const moveCursorY = gsap.quickTo(cursor, 'y', { duration: 0.05, ease: 'power3.out' });
-
-window.addEventListener('mousemove', (e) => {
-  moveCursorX(e.clientX);
-  moveCursorY(e.clientY);
-});
-
-/* Cursor expands over any element with data-cursor="view" */
-document.querySelectorAll('[data-cursor="view"]').forEach((el) => {
-  el.addEventListener('mouseenter', () => cursor.classList.add('is-hovering'));
-  el.addEventListener('mouseleave', () => cursor.classList.remove('is-hovering'));
-});
-
-/* Hide the default system cursor site-wide */
-document.body.style.cursor = 'none';
-
 
 /* ------------------------------------------------------------
    NAV SLIDING INDICATOR
@@ -341,6 +316,43 @@ if (overlay) {
     onComplete: () => overlay.remove(),
   });
 }
+
+
+/* ------------------------------------------------------------
+   COPY EMAIL — Footer icon copies email and shows a tooltip
+   emerging to the right of the icon.
+   ------------------------------------------------------------ */
+function showCopiedTooltip(anchor) {
+  navigator.clipboard.writeText(anchor.dataset.copyEmail);
+  document.querySelectorAll('.copy-tooltip').forEach(t => t.remove());
+
+  const tip = document.createElement('span');
+  tip.className = 'copy-tooltip';
+  tip.textContent = 'Copied!';
+  document.body.appendChild(tip);
+
+  const rect = anchor.getBoundingClientRect();
+  gsap.set(tip, {
+    left: rect.right + 8,
+    top:  rect.top + rect.height / 2,
+    yPercent: -50,
+    x: -8,
+    opacity: 0,
+  });
+  gsap.to(tip, {
+    x: 0,
+    opacity: 1,
+    duration: 0.25,
+    ease: 'power2.out',
+    onComplete() {
+      gsap.to(tip, { opacity: 0, x: 12, duration: 0.3, delay: 1, ease: 'power2.in', onComplete: () => tip.remove() });
+    },
+  });
+}
+
+document.querySelectorAll('.footer__icon[data-copy-email]').forEach(icon => {
+  icon.addEventListener('click', e => { e.preventDefault(); showCopiedTooltip(icon); });
+});
 
 
 /* ------------------------------------------------------------

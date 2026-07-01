@@ -28,34 +28,6 @@ themeToggle.addEventListener('click', () => {
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 
-/* ------------------------------------------------------------
-   CUSTOM CURSOR
-   ------------------------------------------------------------ */
-const cursor = document.getElementById('cursor');
-
-const moveCursorX = gsap.quickTo(cursor, 'x', { duration: 0.15, ease: 'power3.out' });
-const moveCursorY = gsap.quickTo(cursor, 'y', { duration: 0.15, ease: 'power3.out' });
-
-window.addEventListener('mousemove', (e) => {
-  moveCursorX(e.clientX);
-  moveCursorY(e.clientY);
-});
-
-document.querySelectorAll('[data-cursor="view"]').forEach((el) => {
-  el.addEventListener('mouseenter', () => cursor.classList.add('is-hovering'));
-  el.addEventListener('mouseleave', () => cursor.classList.remove('is-hovering'));
-});
-
-/* Hide custom cursor over the Vimeo embed — the iframe swallows
-   mousemove events, which would leave the dot frozen on the border. */
-const embed = document.querySelector('.project-embed');
-if (embed) {
-  embed.addEventListener('mouseenter', () => cursor.style.opacity = '0');
-  embed.addEventListener('mouseleave', () => cursor.style.opacity = '1');
-}
-
-document.body.style.cursor = 'none';
-
 
 /* ------------------------------------------------------------
    NAV SLIDING INDICATOR
@@ -166,6 +138,70 @@ document.querySelectorAll('a[href*="#work"], .nav__link:not(.active):not([href*=
     e.preventDefault();
     fadeToPage(link.getAttribute('href'));
   });
+});
+
+
+/* ------------------------------------------------------------
+   COPY EMAIL — Copies email to clipboard and shows a tooltip.
+   dir 'up': appears above (CTA button).
+   dir 'right': emerges from the right (footer icon).
+   ------------------------------------------------------------ */
+function showCopiedTooltip(anchor, dir) {
+  navigator.clipboard.writeText(anchor.dataset.copyEmail);
+  document.querySelectorAll('.copy-tooltip').forEach(t => t.remove());
+
+  const tip = document.createElement('span');
+  tip.className = 'copy-tooltip';
+  tip.textContent = 'Copied!';
+  document.body.appendChild(tip);
+
+  const rect = anchor.getBoundingClientRect();
+
+  if (dir === 'right') {
+    gsap.set(tip, {
+      left: rect.right + 8,
+      top:  rect.top + rect.height / 2,
+      yPercent: -50,
+      x: -8,
+      opacity: 0,
+    });
+    gsap.to(tip, {
+      x: 0,
+      opacity: 1,
+      duration: 0.25,
+      ease: 'power2.out',
+      onComplete() {
+        gsap.to(tip, { opacity: 0, x: 12, duration: 0.3, delay: 1, ease: 'power2.in', onComplete: () => tip.remove() });
+      },
+    });
+  } else {
+    gsap.set(tip, {
+      left: rect.left + rect.width / 2,
+      top:  rect.top,
+      xPercent: -50,
+      yPercent: -100,
+      y: 0,
+      opacity: 0,
+    });
+    gsap.to(tip, {
+      y: -16,
+      opacity: 1,
+      duration: 0.25,
+      ease: 'power2.out',
+      onComplete() {
+        gsap.to(tip, { opacity: 0, y: -44, duration: 0.3, delay: 1, ease: 'power2.in', onComplete: () => tip.remove() });
+      },
+    });
+  }
+}
+
+const ctaBtn = document.querySelector('.about-cta[data-copy-email]');
+if (ctaBtn) {
+  ctaBtn.addEventListener('click', e => { e.preventDefault(); showCopiedTooltip(ctaBtn, 'up'); });
+}
+
+document.querySelectorAll('.footer__icon[data-copy-email]').forEach(icon => {
+  icon.addEventListener('click', e => { e.preventDefault(); showCopiedTooltip(icon, 'right'); });
 });
 
 

@@ -433,7 +433,6 @@ html:not(.dark) .nav.scrolled .nav__toggle {
   position: relative;
   overflow: hidden;
   background: var(--color-surface);
-  cursor: none;
 
   /* Cards start invisible — GSAP will animate them in on scroll */
   opacity: 0;
@@ -540,24 +539,6 @@ html:not(.dark) .card:hover .card__info .card__title {
    the cursor — so it stays visible on any background including black.
    Must use pure white as the base colour for inversion to work correctly.
    ------------------------------------------------------------ */
-.cursor {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #ffffff;        /* pure white required for difference blend to invert correctly */
-  pointer-events: none;       /* cursor must never block clicks */
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: difference; /* inverts pixels beneath — white on black = white, white on white = black */
-  transition: transform var(--duration-fast) var(--ease-out);
-}
-
-/* Cursor expands over clickable elements */
-.cursor.is-hovering {
-  transform: translate(-50%, -50%) scale(4);
-}
-
 
 /* ------------------------------------------------------------
    FOOTER
@@ -618,7 +599,7 @@ html:not(.dark) .footer__icon {
 
 /* ============================================================
    PROJECT PAGE COMPONENTS
-   Used by projects/*/index.html — not on the home page.
+   Used by project pages — not on the home page.
    ============================================================ */
 
 
@@ -627,7 +608,15 @@ html:not(.dark) .footer__icon {
    Title + category label + brief description at page top.
    ------------------------------------------------------------ */
 .project-hero__label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: var(--space-sm);
+  white-space: nowrap;
+}
+
+.project-hero__label-software {
+  color: var(--color-ink);
 }
 
 .project-hero__title {
@@ -1127,6 +1116,21 @@ html.dark .vanilla-page .project-body__media img {
   opacity: 1;
 }
 
+/* Clipboard copy tooltip */
+.copy-tooltip {
+  position: fixed;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  padding: 0.3em 0.9em;
+  border-radius: 999px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 9999;
+}
+
 /* ── Media particle blur backdrop ──────────────────────────────────────── */
 .nav,
 .page,
@@ -1188,8 +1192,23 @@ body.media-active .footer {
   .nav { padding-inline: var(--space-sm); }
   .nav__links { gap: var(--space-sm); }
 
-  /* ── Custom cursor (touch screens have no pointer) ────────── */
-  .cursor { display: none; }
+  /* ── Nav always visible on mobile (no scroll trigger needed) ── */
+  html.dark .nav         { background: #FCFFF2; border-color: #FCFFF2; }
+  html:not(.dark) .nav   { background: #071610; border-color: #071610; }
+
+  html.dark .nav .nav__logo,
+  html.dark .nav .nav__link,
+  html.dark .nav .nav__toggle { color: #071610; }
+
+  html:not(.dark) .nav .nav__logo,
+  html:not(.dark) .nav .nav__link,
+  html:not(.dark) .nav .nav__toggle { color: #FCFFF2; }
+
+  .nav .nav__link         { opacity: 0.6; }
+  .nav .nav__link:hover,
+  .nav .nav__link.active  { opacity: 1; }
+
+
 
   /* ── Footer ───────────────────────────────────────────────── */
   .footer {
@@ -1229,6 +1248,7 @@ body.media-active .footer {
   .media-particle { font-size: 2rem; }
 
   /* ── Project hero — let quote and brief run full width ──────── */
+  .project-hero__label { white-space: normal; }
   .project-hero__quote { max-width: 100%; }
   .project-hero__brief { max-width: 100%; }
 
@@ -1254,7 +1274,7 @@ body.media-active .footer {
     margin-bottom: var(--space-sm);
   }
   .vanilla-audio-hint::after {
-    content: 'Tap each video to\A enable audio!';
+    content: 'Tap each video\Ato enable audio!';
     white-space: pre-wrap;
     font-size: var(--text-xs);
     letter-spacing: normal;
