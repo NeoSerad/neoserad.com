@@ -88,22 +88,26 @@ window.addEventListener('resize', updateNav, { passive: true });
    All sections start hidden and stagger in top-to-bottom,
    matching the exit animation on the home page.
    ------------------------------------------------------------ */
-const enterEls = [
+const singleEls = [
   '.nav',
-  // Project pages
   '.project-hero__label',
   '.project-hero__title',
   '.project-hero__quote',
   '.project-hero__brief',
   '.project-embed-section',
   '.project-body',
-  '.project-gifs-section',
   '.project-back-section',
-  // About page
   '.about-layout',
   '.about-cta-section',
   '.footer',
 ].map(sel => document.querySelector(sel)).filter(Boolean);
+
+const multiEls = [...document.querySelectorAll('.project-gifs-section')];
+
+const enterEls = [...singleEls, ...multiEls].sort((a, b) => {
+  const pos = Node.DOCUMENT_POSITION_FOLLOWING;
+  return a.compareDocumentPosition(b) & pos ? -1 : 1;
+});
 
 gsap.set(enterEls, { opacity: 0, y: 24 });
 
@@ -114,6 +118,38 @@ gsap.to(enterEls, {
   stagger: 0.09,
   ease: 'power3.out',
   delay: 0.1,
+});
+
+
+/* ------------------------------------------------------------
+   BTS DRAWER — click the label to expand / collapse
+   ------------------------------------------------------------ */
+document.querySelectorAll('.project-gifs__toggle').forEach(toggle => {
+  const drawer = toggle.closest('section').querySelector('.project-gifs__drawer');
+  const grid   = drawer.querySelector('.project-gifs, .project-gifs__content');
+
+  toggle.addEventListener('click', () => {
+    const isOpen = toggle.classList.contains('is-open');
+
+    if (isOpen) {
+      toggle.classList.remove('is-open');
+      gsap.to(grid,   { opacity: 0, duration: 0.2, ease: 'power2.in' });
+      gsap.to(drawer, { height: 0,  duration: 0.45, delay: 0.1, ease: 'power3.inOut' });
+    } else {
+      toggle.classList.add('is-open');
+      gsap.set(grid, { opacity: 0 });
+      gsap.fromTo(drawer,
+        { height: 0 },
+        {
+          height: drawer.scrollHeight,
+          duration: 0.45,
+          ease: 'power3.inOut',
+          onComplete() { drawer.style.height = 'auto'; },
+        }
+      );
+      gsap.to(grid, { opacity: 1, duration: 0.3, delay: 0.25, ease: 'power2.out' });
+    }
+  });
 });
 
 

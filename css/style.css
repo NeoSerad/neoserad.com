@@ -888,6 +888,39 @@ html.dark .vanilla-page .project-body__media img {
   margin-inline: auto;
 }
 
+/* BTS section — same dimensions as the logo carousel */
+.vanilla-bts-section {
+  padding-bottom: var(--space-md);
+}
+
+.vanilla-bts-section .project-gifs__toggle {
+  margin-bottom: var(--space-sm);
+}
+
+.vanilla-logo-section {
+  padding-top: 0;
+}
+
+.vanilla-bts-wrap {
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.vanilla-bts {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+.vanilla-bts video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .vanilla-page .project-body__media img:last-child {
   animation: vanilla-star-spin 30s linear infinite;
 }
@@ -926,10 +959,44 @@ html.dark .vanilla-page .project-body__media img {
   padding-bottom: var(--space-md);
 }
 
+.project-gifs__label {
+  margin-bottom: var(--space-sm);
+}
+
+.project-gifs__toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  user-select: none;
+}
+
+.project-gifs__arrow {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+.project-gifs__toggle.is-open .project-gifs__arrow {
+  transform: rotate(180deg);
+}
+
+.project-gifs__drawer {
+  height: 0;
+  overflow: hidden;
+}
+
 .project-gifs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--grid-gap);
+}
+
+.project-gifs--single {
+  grid-template-columns: 1fr;
+}
+
+.project-gifs--4col {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .project-gif video,
