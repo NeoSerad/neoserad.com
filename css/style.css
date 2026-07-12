@@ -678,6 +678,37 @@ html:not(.dark) .footer__icon {
   display: block;
 }
 
+/* Side-by-side embed row (wide 16:9 + tall 9:16) */
+.project-embed-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.project-embed-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/*
+  Exact formula: for wide (16:9) and tall (9:16) to share the same height,
+  tall_width / wide_width = (9/16)² = 81/256, giving
+  tall_width = (row_width − gap) × 81/337
+*/
+.project-embed-col--tall {
+  flex: 0 0 auto;
+  width: calc((100% - var(--space-sm)) * 81 / 337);
+}
+
+.project-embed-row .project-embed {
+  width: 100%;
+}
+
+.project-embed-row .project-embed--tall {
+  aspect-ratio: 9 / 16;
+}
+
 
 /* ------------------------------------------------------------
    PROJECT BODY
@@ -1246,6 +1277,13 @@ body.media-active .footer {
 
   /* ── About — particle font size on mobile ───────────────────── */
   .media-particle { font-size: 2rem; }
+
+  /* ── Dual embed row — stack on mobile ───────────────────────── */
+  .project-embed-row { flex-direction: column; }
+  .project-embed-col--tall {
+    width: 60%;
+    margin-inline: auto;
+  }
 
   /* ── Project hero — let quote and brief run full width ──────── */
   .project-hero__label { white-space: normal; }
