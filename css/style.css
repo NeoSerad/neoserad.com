@@ -985,6 +985,15 @@ html.dark .vanilla-page .project-body__media img {
   overflow: hidden;
 }
 
+/* Gap strips use the opposite theme's bg — dark strips in light mode, light in dark */
+.project-gifs__drawer .project-gifs {
+  background-color: #050b09;
+}
+
+html.dark .project-gifs__drawer .project-gifs {
+  background-color: #eef3dc;
+}
+
 .project-gifs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
