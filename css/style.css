@@ -647,8 +647,12 @@ html:not(.dark) .footer__icon {
    VIMEO EMBED
    Responsive 16:9 iframe container.
    ------------------------------------------------------------ */
+.project-hero {
+  padding-bottom: var(--space-lg);
+}
+
 .project-embed-section {
-  padding-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
 }
 
 #landing-embed {
@@ -719,6 +723,8 @@ html:not(.dark) .footer__icon {
   display: flex;
   align-items: flex-start;
   gap: var(--space-xl);
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
 }
 
 .project-body__text {
@@ -768,7 +774,7 @@ html.dark .vanilla-page .project-body__media img {
 .vanilla-section-divider {
   border-top: 1px dashed var(--color-ink-muted);
   opacity: 0.4;
-  margin-block: var(--space-xl);
+  margin-block: var(--space-lg);
 }
 
 /* ------------------------------------------------------------
@@ -899,6 +905,7 @@ html.dark .vanilla-page .project-body__media img {
 
 .vanilla-logo-section {
   padding-top: 0;
+  padding-bottom: var(--space-md);
 }
 
 .vanilla-bts-wrap {
@@ -1068,8 +1075,8 @@ html.dark .project-gifs__drawer .project-gifs {
    Outlined pill link centred below the gif grid.
    ------------------------------------------------------------ */
 .project-back-section {
-  padding-top: 3rem;
-  padding-bottom: var(--space-xl);
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-lg);
   display: flex;
   justify-content: center;
 }
@@ -1395,12 +1402,34 @@ body.media-active .footer {
     text-transform: none;
   }
 
+  /* ── Back button — re-assert centering (overrides .section 4rem) */
+  .project-back-section {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-lg);
+  }
+
+  /* ── Embed → body gap (tighten significantly on mobile) ──────── */
+  .project-embed-section { padding-bottom: var(--space-sm); }
+  .project-body          { padding-top:    var(--space-sm); }
+
+  /* ── Vanilla divider (16rem total → 4rem total) ──────────────── */
+  .vanilla-section-divider { margin-block: var(--space-sm); }
+
+  /* ── Authentics SVG gap (stacked media items) ────────────────── */
+  .project-body__media { gap: var(--space-md); }
+
 }
 
 @media (max-width: 480px) {
 
   /* ── Tighter spacing on small phones ─────────────────────── */
   .section { padding-block: var(--space-md); }
+
+  /* ── Re-assert back button centering (.section override above reverts it) */
+  .project-back-section {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-lg);
+  }
 
   /* ── Hero heading — raise clamp floor for narrow screens ──── */
   .hero__heading {
