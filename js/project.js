@@ -123,10 +123,16 @@ gsap.to(enterEls, {
 
 /* ------------------------------------------------------------
    BTS DRAWER — click the label to expand / collapse
+   Open all drawers by default on load (no animation — entrance
+   animation handles the initial reveal).
    ------------------------------------------------------------ */
 document.querySelectorAll('.project-gifs__toggle').forEach(toggle => {
   const drawer = toggle.closest('section').querySelector('.project-gifs__drawer');
   const grid   = drawer.querySelector('.project-gifs, .project-gifs__content');
+
+  toggle.classList.add('is-open');
+  gsap.set(drawer, { height: 'auto' });
+  gsap.set(grid,   { opacity: 1 });
 
   toggle.addEventListener('click', () => {
     const isOpen = toggle.classList.contains('is-open');
