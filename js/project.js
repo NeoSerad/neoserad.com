@@ -87,6 +87,7 @@ window.addEventListener('resize', updateNav, { passive: true });
    PAGE ENTRANCE TRANSITION
    All sections start hidden and stagger in top-to-bottom,
    matching the exit animation on the home page.
+   Skipped on back/forward navigation — page shows instantly.
    ------------------------------------------------------------ */
 const singleEls = [
   '.nav',
@@ -109,16 +110,19 @@ const enterEls = [...singleEls, ...multiEls].sort((a, b) => {
   return a.compareDocumentPosition(b) & pos ? -1 : 1;
 });
 
-gsap.set(enterEls, { opacity: 0, y: 24 });
+const isBackForward = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
 
-gsap.to(enterEls, {
-  opacity: 1,
-  y: 0,
-  duration: 0.55,
-  stagger: 0.09,
-  ease: 'power3.out',
-  delay: 0.1,
-});
+if (!isBackForward) {
+  gsap.set(enterEls, { opacity: 0, y: 24 });
+  gsap.to(enterEls, {
+    opacity: 1,
+    y: 0,
+    duration: 0.55,
+    stagger: 0.09,
+    ease: 'power3.out',
+    delay: 0.1,
+  });
+}
 
 
 /* ------------------------------------------------------------
@@ -176,18 +180,17 @@ function fadeToPage(href) {
     onComplete: () => { window.location.href = href; } });
 }
 
-/* pagehide — fires before this page is frozen into bfcache. Strip the exit
-   overlay now so the frozen snapshot is clean; bfcache restore won't show it. */
-window.addEventListener('pagehide', () => {
+/* Opt older browsers out of bfcache so back always does a full reload. */
+window.addEventListener('unload', () => {});
+
+/* pageshow — always strip any leftover exit overlay (no-op on fresh loads).
+   Also clear GSAP inline styles if bfcache restored the page mid-animation. */
+window.addEventListener('pageshow', (e) => {
   document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
   document.body.style.pointerEvents = '';
-});
-
-/* pageshow (persisted) — bfcache restore. GSAP inline styles from the
-   entrance animation are frozen; clear them so the page renders fully. */
-window.addEventListener('pageshow', (e) => {
-  if (!e.persisted) return;
-  gsap.set(enterEls, { clearProps: 'opacity,transform' });
+  if (e.persisted) {
+    gsap.set(enterEls, { clearProps: 'all' });
+  }
 });
 
 document.querySelectorAll('a[href*="#work"], .nav__link:not(.active):not([href*="#work"])').forEach(link => {

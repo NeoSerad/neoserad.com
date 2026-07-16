@@ -131,23 +131,27 @@ window.addEventListener('resize', updateNav, { passive: true });
 /* ------------------------------------------------------------
    HERO ENTRANCE
    Staggers the label and heading in on page load.
-   Starts slightly below and fades up.
+   Skipped on back/forward navigation — page shows instantly.
    ------------------------------------------------------------ */
-gsap.from('.hero__label', {
-  opacity: 0,
-  y: 16,
-  duration: 0.8,
-  ease: 'power3.out',
-  delay: 0.2,
-});
+const isBackForward = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
 
-gsap.from('.hero__heading', {
-  opacity: 0,
-  y: 24,
-  duration: 1,
-  ease: 'power3.out',
-  delay: 0.4,  /* slight stagger after the label */
-});
+if (!isBackForward) {
+  gsap.from('.hero__label', {
+    opacity: 0,
+    y: 16,
+    duration: 0.8,
+    ease: 'power3.out',
+    delay: 0.2,
+  });
+
+  gsap.from('.hero__heading', {
+    opacity: 0,
+    y: 24,
+    duration: 1,
+    ease: 'power3.out',
+    delay: 0.4,
+  });
+}
 
 
 /* ------------------------------------------------------------
@@ -299,30 +303,26 @@ document.querySelectorAll('.nav__link').forEach(link => {
   link.addEventListener('click', e => { e.preventDefault(); fadeToPage(href); });
 });
 
-/* pagehide — fires before this page is frozen into bfcache. Strip the exit
-   overlay and reset all GSAP/interaction state so the frozen snapshot is
-   clean; pressing back won't restore a covered or locked page. */
-window.addEventListener('pagehide', () => {
-  document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
-  document.body.style.pointerEvents = '';
-  transitioning = false;
-  const resetEls = [
-    nav,
-    document.querySelector('.hero'),
-    document.querySelector('.grid__label'),
-    document.querySelector('#landing-embed'),
-    document.querySelector('.footer'),
-    ...document.querySelectorAll('.card'),
-  ].filter(Boolean);
-  gsap.set(resetEls, { clearProps: 'all' });
-});
+/* Opt older browsers out of bfcache so back always does a full reload. */
+window.addEventListener('unload', () => {});
 
-/* pageshow (persisted) — belt-and-suspenders for any state still frozen. */
+/* pageshow — always strip any leftover exit overlay (no-op on fresh loads).
+   Also clear GSAP/interaction state if bfcache restored the page mid-animation. */
 window.addEventListener('pageshow', (e) => {
-  if (!e.persisted) return;
   document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
   document.body.style.pointerEvents = '';
   transitioning = false;
+  if (e.persisted) {
+    const resetEls = [
+      nav,
+      document.querySelector('.hero'),
+      document.querySelector('.grid__label'),
+      document.querySelector('#landing-embed'),
+      document.querySelector('.footer'),
+      ...document.querySelectorAll('.card'),
+    ].filter(Boolean);
+    gsap.set(resetEls, { clearProps: 'all' });
+  }
 });
 
 
