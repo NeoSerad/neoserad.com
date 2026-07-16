@@ -310,24 +310,21 @@ document.querySelectorAll('.nav__link').forEach(link => {
   link.addEventListener('click', e => { e.preventDefault(); fadeToPage(href); });
 });
 
-/* pageshow fires on every page show — both fresh loads and bfcache restores.
-   Always remove the exit overlay (safe no-op when it doesn't exist).
-   On bfcache restores, also clear GSAP inline styles so elements are visible. */
+/* pageshow — fires on every page show, both fresh loads and bfcache restores.
+   A bfcache restore (e.persisted) re-shows a FROZEN snapshot: scripts never
+   re-run, so Lenis's virtual scroll and in-frame video/iframe paint come back
+   broken (whatever was on-screen at exit fails to render). A manual refresh
+   fixes it — so we do exactly that automatically. Forcing a reload only on
+   restore leaves normal forward loads untouched, and the reloaded page is a
+   fresh, correct render. */
 window.addEventListener('pageshow', (e) => {
+  if (e.persisted) {
+    window.location.reload();
+    return;
+  }
   document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
   document.body.style.pointerEvents = '';
   transitioning = false;
-  if (e.persisted) {
-    const resetEls = [
-      nav,
-      document.querySelector('.hero'),
-      document.querySelector('.grid__label'),
-      document.querySelector('#landing-embed'),
-      document.querySelector('.footer'),
-      ...document.querySelectorAll('.card'),
-    ].filter(Boolean);
-    gsap.set(resetEls, { clearProps: 'all' });
-  }
 });
 
 
