@@ -131,27 +131,23 @@ window.addEventListener('resize', updateNav, { passive: true });
 /* ------------------------------------------------------------
    HERO ENTRANCE
    Staggers the label and heading in on page load.
-   Skipped on back/forward navigation — page shows instantly.
+   Starts slightly below and fades up.
    ------------------------------------------------------------ */
-const isBackForward = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
+gsap.from('.hero__label', {
+  opacity: 0,
+  y: 16,
+  duration: 0.8,
+  ease: 'power3.out',
+  delay: 0.2,
+});
 
-if (!isBackForward) {
-  gsap.from('.hero__label', {
-    opacity: 0,
-    y: 16,
-    duration: 0.8,
-    ease: 'power3.out',
-    delay: 0.2,
-  });
-
-  gsap.from('.hero__heading', {
-    opacity: 0,
-    y: 24,
-    duration: 1,
-    ease: 'power3.out',
-    delay: 0.4,
-  });
-}
+gsap.from('.hero__heading', {
+  opacity: 0,
+  y: 24,
+  duration: 1,
+  ease: 'power3.out',
+  delay: 0.4,  /* slight stagger after the label */
+});
 
 
 /* ------------------------------------------------------------
@@ -303,11 +299,9 @@ document.querySelectorAll('.nav__link').forEach(link => {
   link.addEventListener('click', e => { e.preventDefault(); fadeToPage(href); });
 });
 
-/* Opt older browsers out of bfcache so back always does a full reload. */
-window.addEventListener('unload', () => {});
-
-/* pageshow — always strip any leftover exit overlay (no-op on fresh loads).
-   Also clear GSAP/interaction state if bfcache restored the page mid-animation. */
+/* pageshow fires on every page show — both fresh loads and bfcache restores.
+   Always remove the exit overlay (safe no-op when it doesn't exist).
+   On bfcache restores, also clear GSAP inline styles so elements are visible. */
 window.addEventListener('pageshow', (e) => {
   document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
   document.body.style.pointerEvents = '';

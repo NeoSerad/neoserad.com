@@ -87,7 +87,6 @@ window.addEventListener('resize', updateNav, { passive: true });
    PAGE ENTRANCE TRANSITION
    All sections start hidden and stagger in top-to-bottom,
    matching the exit animation on the home page.
-   Skipped on back/forward navigation — page shows instantly.
    ------------------------------------------------------------ */
 const singleEls = [
   '.nav',
@@ -110,19 +109,16 @@ const enterEls = [...singleEls, ...multiEls].sort((a, b) => {
   return a.compareDocumentPosition(b) & pos ? -1 : 1;
 });
 
-const isBackForward = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
+gsap.set(enterEls, { opacity: 0, y: 24 });
 
-if (!isBackForward) {
-  gsap.set(enterEls, { opacity: 0, y: 24 });
-  gsap.to(enterEls, {
-    opacity: 1,
-    y: 0,
-    duration: 0.55,
-    stagger: 0.09,
-    ease: 'power3.out',
-    delay: 0.1,
-  });
-}
+gsap.to(enterEls, {
+  opacity: 1,
+  y: 0,
+  duration: 0.55,
+  stagger: 0.09,
+  ease: 'power3.out',
+  delay: 0.1,
+});
 
 
 /* ------------------------------------------------------------
@@ -180,11 +176,9 @@ function fadeToPage(href) {
     onComplete: () => { window.location.href = href; } });
 }
 
-/* Opt older browsers out of bfcache so back always does a full reload. */
-window.addEventListener('unload', () => {});
-
-/* pageshow — always strip any leftover exit overlay (no-op on fresh loads).
-   Also clear GSAP inline styles if bfcache restored the page mid-animation. */
+/* pageshow fires on every page show — both fresh loads and bfcache restores.
+   Always remove the exit overlay (safe no-op when it doesn't exist).
+   On bfcache restores, also clear GSAP inline styles so elements are visible. */
 window.addEventListener('pageshow', (e) => {
   document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
   document.body.style.pointerEvents = '';
