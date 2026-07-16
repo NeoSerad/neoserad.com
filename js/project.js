@@ -38,6 +38,12 @@ function isBackForwardNav() {
   return performance.navigation && performance.navigation.type === 2;
 }
 
+/* Touch-primary (mobile/tablet) vs pointer devices (desktop). On a bfcache
+   restore these need different repair: mobile fails to repaint in-frame
+   media and needs a full reload; desktop resumes fine once the frozen exit
+   overlay is cleared. */
+const isTouchPrimary = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
 
 
 /* ------------------------------------------------------------
@@ -120,9 +126,13 @@ const enterEls = [...singleEls, ...multiEls].sort((a, b) => {
   return a.compareDocumentPosition(b) & pos ? -1 : 1;
 });
 
-/* On back/forward loads, leave everything at its natural CSS state so the
-   page appears instantly — no hidden elements to get stuck. */
-if (!isBackForwardNav()) {
+/* On back/forward loads, show everything instantly. These elements are
+   opacity:0 in CSS by default (see PROJECT PAGE — INITIAL HIDDEN STATE), so
+   we must explicitly reveal them — skipping the animation alone would leave
+   them stuck hidden. */
+if (isBackForwardNav()) {
+  gsap.set(enterEls, { opacity: 1, y: 0 });
+} else {
   gsap.set(enterEls, { opacity: 0, y: 24 });
 
   gsap.to(enterEls, {
@@ -192,16 +202,22 @@ function fadeToPage(href) {
 }
 
 /* pageshow — fires on every page show, both fresh loads and bfcache restores.
-   A bfcache restore (e.persisted) re-shows a FROZEN snapshot: scripts never
-   re-run, so Lenis's virtual scroll and in-frame video/iframe paint come back
-   broken (whatever was on-screen at exit fails to render). A manual refresh
-   fixes it — so we do exactly that automatically. Forcing a reload only on
-   restore leaves normal forward loads untouched, and the reloaded page is a
-   fresh, correct render. */
+   On a bfcache restore (e.persisted) the browser re-shows a frozen snapshot:
+   the exit overlay is still covering the page and GSAP styles are frozen.
+   - Mobile: the browser also fails to repaint in-frame video/iframe, which
+     only a full reload fixes (matches the manual-refresh workaround).
+   - Desktop: the page resumes fine once we strip the overlay and clear any
+     leftover GSAP inline styles — a reload here just reintroduces jank. */
 window.addEventListener('pageshow', (e) => {
-  if (e.persisted) {
+  if (e.persisted && isTouchPrimary) {
     window.location.reload();
     return;
+  }
+  if (e.persisted) {
+    /* Desktop bfcache restore — force entrance elements visible. clearProps
+       would strip the inline opacity and revert them to the CSS opacity:0
+       hidden state, re-hiding the content. */
+    gsap.set(enterEls, { opacity: 1, y: 0 });
   }
   document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
   document.body.style.pointerEvents = '';
