@@ -37,6 +37,15 @@ themeToggle.addEventListener('click', () => {
    ------------------------------------------------------------ */
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
+/* True when this page load is a back/forward navigation. Some mobile
+   browsers do a full reload (not a bfcache restore) on back — the entrance
+   animation would then leave the restored view hidden. Skip it in that case. */
+function isBackForwardNav() {
+  const navEntry = performance.getEntriesByType('navigation')[0];
+  if (navEntry && navEntry.type) return navEntry.type === 'back_forward';
+  return performance.navigation && performance.navigation.type === 2;
+}
+
 
 
 /* ------------------------------------------------------------
@@ -133,21 +142,23 @@ window.addEventListener('resize', updateNav, { passive: true });
    Staggers the label and heading in on page load.
    Starts slightly below and fades up.
    ------------------------------------------------------------ */
-gsap.from('.hero__label', {
-  opacity: 0,
-  y: 16,
-  duration: 0.8,
-  ease: 'power3.out',
-  delay: 0.2,
-});
+if (!isBackForwardNav()) {
+  gsap.from('.hero__label', {
+    opacity: 0,
+    y: 16,
+    duration: 0.8,
+    ease: 'power3.out',
+    delay: 0.2,
+  });
 
-gsap.from('.hero__heading', {
-  opacity: 0,
-  y: 24,
-  duration: 1,
-  ease: 'power3.out',
-  delay: 0.4,  /* slight stagger after the label */
-});
+  gsap.from('.hero__heading', {
+    opacity: 0,
+    y: 24,
+    duration: 1,
+    ease: 'power3.out',
+    delay: 0.4,  /* slight stagger after the label */
+  });
+}
 
 
 /* ------------------------------------------------------------

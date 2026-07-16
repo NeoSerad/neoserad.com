@@ -27,6 +27,17 @@ themeToggle.addEventListener('click', () => {
    ------------------------------------------------------------ */
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
+/* True when this page load is a back/forward navigation. Some mobile
+   browsers do a full reload (not a bfcache restore) when the user hits
+   back — in that case the entrance animation would run and leave the
+   restored view hidden. We detect it and skip the animation entirely. */
+function isBackForwardNav() {
+  const nav = performance.getEntriesByType('navigation')[0];
+  if (nav && nav.type) return nav.type === 'back_forward';
+  /* Legacy fallback: 2 === TYPE_BACK_FORWARD */
+  return performance.navigation && performance.navigation.type === 2;
+}
+
 
 
 /* ------------------------------------------------------------
@@ -109,16 +120,20 @@ const enterEls = [...singleEls, ...multiEls].sort((a, b) => {
   return a.compareDocumentPosition(b) & pos ? -1 : 1;
 });
 
-gsap.set(enterEls, { opacity: 0, y: 24 });
+/* On back/forward loads, leave everything at its natural CSS state so the
+   page appears instantly — no hidden elements to get stuck. */
+if (!isBackForwardNav()) {
+  gsap.set(enterEls, { opacity: 0, y: 24 });
 
-gsap.to(enterEls, {
-  opacity: 1,
-  y: 0,
-  duration: 0.55,
-  stagger: 0.09,
-  ease: 'power3.out',
-  delay: 0.1,
-});
+  gsap.to(enterEls, {
+    opacity: 1,
+    y: 0,
+    duration: 0.55,
+    stagger: 0.09,
+    ease: 'power3.out',
+    delay: 0.1,
+  });
+}
 
 
 /* ------------------------------------------------------------
