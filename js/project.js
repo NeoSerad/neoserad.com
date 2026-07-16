@@ -167,6 +167,7 @@ document.querySelectorAll('.project-gifs__toggle').forEach(toggle => {
 function fadeToPage(href) {
   const t  = localStorage.getItem('theme') || 'light';
   const ol = document.createElement('div');
+  ol.setAttribute('data-exit-overlay', '');
   ol.style.cssText = 'position:fixed;inset:0;z-index:9998;background:' +
                      (t === 'dark' ? '#071610' : '#FCFFF2') +
                      ';opacity:0;pointer-events:none';
@@ -174,6 +175,16 @@ function fadeToPage(href) {
   gsap.to(ol, { opacity: 1, duration: 0.4, ease: 'power2.in',
     onComplete: () => { window.location.href = href; } });
 }
+
+/* Bfcache restore — browser back/forward restores a frozen page snapshot.
+   Any exit overlay or GSAP inline styles from before navigation are still
+   present. Clear them so the page is fully visible and interactive. */
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
+  document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
+  document.body.style.pointerEvents = '';
+  gsap.set(enterEls, { clearProps: 'opacity,transform' });
+});
 
 document.querySelectorAll('a[href*="#work"], .nav__link:not(.active):not([href*="#work"])').forEach(link => {
   link.addEventListener('click', e => {

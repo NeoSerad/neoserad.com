@@ -284,6 +284,7 @@ document.querySelectorAll('.card').forEach((card) => {
 function fadeToPage(href) {
   const t  = localStorage.getItem('theme') || 'light';
   const ol = document.createElement('div');
+  ol.setAttribute('data-exit-overlay', '');
   ol.style.cssText = 'position:fixed;inset:0;z-index:9998;background:' +
                      (t === 'dark' ? '#071610' : '#FCFFF2') +
                      ';opacity:0;pointer-events:none';
@@ -296,6 +297,27 @@ document.querySelectorAll('.nav__link').forEach(link => {
   const href = link.getAttribute('href');
   if (!href || href.startsWith('#')) return;
   link.addEventListener('click', e => { e.preventDefault(); fadeToPage(href); });
+});
+
+/* Bfcache restore — browser back restores a frozen snapshot that may have:
+   - A full-opacity exit overlay covering the page
+   - All elements at opacity:0 / transformed from the card click animation
+   - body pointer-events:none and transitioning=true (interaction locked)
+   Clear everything so the page is fully visible and interactive again. */
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
+  document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
+  document.body.style.pointerEvents = '';
+  transitioning = false;
+  const resetEls = [
+    nav,
+    document.querySelector('.hero'),
+    document.querySelector('.grid__label'),
+    document.querySelector('#landing-embed'),
+    document.querySelector('.footer'),
+    ...document.querySelectorAll('.card'),
+  ].filter(Boolean);
+  gsap.set(resetEls, { clearProps: 'all' });
 });
 
 
