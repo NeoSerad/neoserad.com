@@ -1369,7 +1369,8 @@ body.media-active .footer {
   }
 
   /* ── Project hero — let quote and brief run full width ──────── */
-  .project-hero__label { white-space: normal; }
+  .project-hero__label { white-space: normal; flex-direction: column; align-items: flex-start; gap: 0.15em; }
+  .project-hero__label-sep { display: none; }
   .project-hero__quote { max-width: 100%; }
   .project-hero__brief { max-width: 100%; }
 

@@ -176,13 +176,17 @@ function fadeToPage(href) {
     onComplete: () => { window.location.href = href; } });
 }
 
-/* Bfcache restore — browser back/forward restores a frozen page snapshot.
-   Any exit overlay or GSAP inline styles from before navigation are still
-   present. Clear them so the page is fully visible and interactive. */
-window.addEventListener('pageshow', (e) => {
-  if (!e.persisted) return;
+/* pagehide — fires before this page is frozen into bfcache. Strip the exit
+   overlay now so the frozen snapshot is clean; bfcache restore won't show it. */
+window.addEventListener('pagehide', () => {
   document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
   document.body.style.pointerEvents = '';
+});
+
+/* pageshow (persisted) — bfcache restore. GSAP inline styles from the
+   entrance animation are frozen; clear them so the page renders fully. */
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
   gsap.set(enterEls, { clearProps: 'opacity,transform' });
 });
 

@@ -299,13 +299,10 @@ document.querySelectorAll('.nav__link').forEach(link => {
   link.addEventListener('click', e => { e.preventDefault(); fadeToPage(href); });
 });
 
-/* Bfcache restore — browser back restores a frozen snapshot that may have:
-   - A full-opacity exit overlay covering the page
-   - All elements at opacity:0 / transformed from the card click animation
-   - body pointer-events:none and transitioning=true (interaction locked)
-   Clear everything so the page is fully visible and interactive again. */
-window.addEventListener('pageshow', (e) => {
-  if (!e.persisted) return;
+/* pagehide — fires before this page is frozen into bfcache. Strip the exit
+   overlay and reset all GSAP/interaction state so the frozen snapshot is
+   clean; pressing back won't restore a covered or locked page. */
+window.addEventListener('pagehide', () => {
   document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
   document.body.style.pointerEvents = '';
   transitioning = false;
@@ -318,6 +315,14 @@ window.addEventListener('pageshow', (e) => {
     ...document.querySelectorAll('.card'),
   ].filter(Boolean);
   gsap.set(resetEls, { clearProps: 'all' });
+});
+
+/* pageshow (persisted) — belt-and-suspenders for any state still frozen. */
+window.addEventListener('pageshow', (e) => {
+  if (!e.persisted) return;
+  document.querySelectorAll('[data-exit-overlay]').forEach(el => el.remove());
+  document.body.style.pointerEvents = '';
+  transitioning = false;
 });
 
 
